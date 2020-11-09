@@ -1,59 +1,77 @@
 import React from 'react';
-import { BasicLayoutProps, Settings as LayoutSettings } from '@ant-design/pro-layout';
+import { BasicLayoutProps, Settings as LayoutSettings,MenuDataItem } from '@ant-design/pro-layout';
 import { notification } from 'antd';
 import { history, RequestConfig } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { ResponseError } from 'umi-request';
-import { queryCurrent } from './services/user';
+// import { queryCurrent } from './services/user';
 import defaultSettings from '../config/defaultSettings';
+import { SmileOutlined, HeartOutlined } from '@ant-design/icons';
+import { getCurrentUser } from '@/services/account';
+import { IGlobalProps } from '@/services/global.d';
+const IconMap = {
+  SmileOutlined: <SmileOutlined />,
+  HeartOutlined: <HeartOutlined />,
+};
 
-export async function getInitialState(): Promise<{
-  settings?: LayoutSettings;
-  currentUser?: API.CurrentUser;
-  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
-}> {
-  const fetchUserInfo = async () => {
-    try {
-      const currentUser = await queryCurrent();
-      return currentUser;
-    } catch (error) {
-      history.push('/user/login');
-    }
-    return undefined;
-  };
-  // 如果是登录页面，不执行
-  if (history.location.pathname !== '/user/login') {
-    const currentUser = await fetchUserInfo();
+export async function getInitialState(): Promise<IGlobalProps> {
+  // const tokenStore = getToken();
+  try {
+    // 未登录的情况
+    // if (!tokenStore) {
+    //   throw new Error('UNLOGIN');
+    // }
+    const currentUser = await getCurrentUser();
+    //  const menuData = await getMenuList(currentUser?.userid || '');
     return {
-      fetchUserInfo,
       currentUser,
       settings: defaultSettings,
+      // menu:menuData
     };
+  } catch (error) {
+    const { message: errorMessage } = error;
+    const {
+      location: { pathname },
+    } = history;
+    // 未登录，处理跳转到登录页面
+    if (errorMessage === 'UNLOGIN') {
+      const loginPathName = '/user/login';
+      pathname !== loginPathName &&
+        history.push({
+          pathname: loginPathName,
+          query: {
+            redirect: pathname,
+          },
+        });
+    }
   }
   return {
-    fetchUserInfo,
     settings: defaultSettings,
+    // menu: [],
   };
 }
+
+const loopMenuItem = (menus: MenuDataItem[]): MenuDataItem[] => (
+  menus.map(({ icon, children, ...item }) => {
+    return {
+      ...item,
+      icon: icon && IconMap[icon as string],
+      children: children && loopMenuItem(children),
+    }
+  })
+);
 
 export const layout = ({
   initialState,
 }: {
-  initialState: { settings?: LayoutSettings; currentUser?: API.CurrentUser };
+  initialState: { settings?: LayoutSettings; currentUser?: API.CurrentUser;menu: MenuDataItem[];  };
 }): BasicLayoutProps => {
   return {
+    // menuDataRender: () => loopMenuItem(initialState.menu),
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     footerRender: () => <Footer />,
-    onPageChange: () => {
-      const { currentUser } = initialState;
-      const { location } = history;
-      // 如果没有登录，重定向到 login
-      if (!currentUser && location.pathname !== '/user/login') {
-        history.push('/user/login');
-      }
-    },
     menuHeaderRender: undefined,
     ...initialState?.settings,
   };
@@ -102,6 +120,13 @@ const errorHandler = (error: ResponseError) => {
   throw error;
 };
 
-export const request: RequestConfig = {
+export const request = {
   errorHandler,
+  credentials: 'include', // 默认请求是否带上cookie
+  timeout: 30000,
+  headers: {
+    Accept: 'application/json',
+    Authorization:'Bearer 10000'
+  },
+  throwErrIfParseFail: true, //当JSON.parse(res) 出错时，抛出错误
 };

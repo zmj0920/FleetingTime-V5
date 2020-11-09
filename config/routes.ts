@@ -1,4 +1,9 @@
-﻿export default [
+﻿import {Permissions} from './permissions'
+export default [
+  {
+    path: '/',
+    redirect: '/welcome',
+  },
   {
     path: '/user',
     layout: false,
@@ -14,18 +19,20 @@
     path: '/welcome',
     name: 'welcome',
     icon: 'smile',
+    access: Permissions.template.welcome.index,
     component: './Welcome',
   },
   {
     path: '/admin',
     name: 'admin',
     icon: 'crown',
-    access: 'canAdmin',
+    access: Permissions.template.admin.index,
     component: './Admin',
     routes: [
       {
         path: '/admin/sub-page',
         name: 'sub-page',
+        access: Permissions.template.admin.list.index,
         icon: 'smile',
         component: './Welcome',
       },
@@ -34,12 +41,9 @@
   {
     name: 'list.table-list',
     icon: 'table',
+    access: Permissions.template.list.index,
     path: '/list',
     component: './ListTableList',
-  },
-  {
-    path: '/',
-    redirect: '/welcome',
   },
   {
     component: './404',

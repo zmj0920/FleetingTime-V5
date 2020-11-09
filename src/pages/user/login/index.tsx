@@ -11,12 +11,12 @@ import logo from '@/assets/logo.svg';
 import { Alert, Space, message, Tabs } from 'antd';
 import React, { useState } from 'react';
 import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
-import { useIntl, Link, history, FormattedMessage, SelectLang } from 'umi';
+import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
 import Footer from '@/components/Footer';
 import { fakeAccountLogin, getFakeCaptcha, LoginParamsType } from '@/services/login';
-
+import { useRequest } from 'ahooks';
 import styles from './index.less';
-
+import { login } from '@/services/account';
 const LoginMessage: React.FC<{
   content: string;
 }> = ({ content }) => (
@@ -35,33 +35,51 @@ const LoginMessage: React.FC<{
  */
 const goto = () => {
   const { query } = history.location;
-  const { redirect } = query as { redirect: string };
-  window.location.href = redirect || '/';
+  history.push(query.redirect || '/');
 };
 
 const Login: React.FC<{}> = () => {
-  const [submitting, setSubmitting] = useState(false);
+  // const [submitting, setSubmitting] = useState(false);
   const [userLoginState, setUserLoginState] = useState<API.LoginStateType>({});
   const [type, setType] = useState<string>('account');
   const intl = useIntl();
 
-  const handleSubmit = async (values: LoginParamsType) => {
-    setSubmitting(true);
-    try {
-      // 登录
-      const msg = await fakeAccountLogin({ ...values, type });
-      if (msg.status === 'ok') {
-        message.success('登录成功！');
+  const { refresh } = useModel('@@initialState');
+  const { loading, run } = useRequest(login, {
+    manual: true,
+    onError: () => { },
+  });
+
+  const onFinish = (values: LoginParamsType) => {
+    let value = Object.assign(values, { type })
+    run(value).then(async (data) => {
+      setUserLoginState(data)
+      const { tokenValue } = data
+
+      if (tokenValue) {
+        await refresh();
         goto();
-        return;
       }
-      // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
-    } catch (error) {
-      message.error('登录失败，请重试！');
-    }
-    setSubmitting(false);
+    });
   };
+
+  // const handleSubmit = async (values: LoginParamsType) => {
+  //    setSubmitting(true);
+  //   try {
+  //     // 登录
+  //     const msg = await fakeAccountLogin({ ...values, type });
+  //     if (msg.status === 'ok') {
+  //       message.success('登录成功！');
+  //       goto();
+  //       return;
+  //     }
+  //     // 如果失败去设置用户错误信息
+  //     setUserLoginState(msg);
+  //   } catch (error) {
+  //     message.error('登录失败，请重试！');
+  //   }
+  //    setSubmitting(false);
+  // };
   const { status, type: loginType } = userLoginState;
 
   return (
@@ -79,7 +97,6 @@ const Login: React.FC<{}> = () => {
           </div>
           <div className={styles.desc}>Ant Design 是西湖区最具影响力的 Web 设计规范</div>
         </div>
-
         <div className={styles.main}>
           <ProForm
             initialValues={{
@@ -88,7 +105,7 @@ const Login: React.FC<{}> = () => {
             submitter={{
               render: (_, dom) => dom.pop(),
               submitButtonProps: {
-                loading: submitting,
+                loading: loading,
                 size: 'large',
                 style: {
                   width: '100%',
@@ -96,7 +113,8 @@ const Login: React.FC<{}> = () => {
               },
             }}
             onFinish={async (values) => {
-              handleSubmit(values);
+              // handleSubmit(values);
+              onFinish(values);
             }}
           >
             <Tabs activeKey={type} onChange={setType}>
@@ -222,13 +240,13 @@ const Login: React.FC<{}> = () => {
                   captchaTextRender={(timing, count) =>
                     timing
                       ? `${count} ${intl.formatMessage({
-                          id: 'pages.getCaptchaSecondText',
-                          defaultMessage: '获取验证码',
-                        })}`
+                        id: 'pages.getCaptchaSecondText',
+                        defaultMessage: '获取验证码',
+                      })}`
                       : intl.formatMessage({
-                          id: 'pages.login.phoneLogin.getVerificationCode',
-                          defaultMessage: '获取验证码',
-                        })
+                        id: 'pages.login.phoneLogin.getVerificationCode',
+                        defaultMessage: '获取验证码',
+                      })
                   }
                   name="captcha"
                   rules={[
