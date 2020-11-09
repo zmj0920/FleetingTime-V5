@@ -13,7 +13,9 @@ const Permissions = {
         },
       },
       list:{
-        index:'4d60d7d9-7506-4853-a2e2-8248bc1053fa'
+        index:'4d60d7d9-7506-4853-a2e2-8248bc1053fa',
+        edit: 'b0f6e4ee-456b-40e5-a6a7-b26c0f991006',
+        delete: '402e4172-d9ea-44f0-a2dd-364edb3b4dd0',
       }
     },
   };

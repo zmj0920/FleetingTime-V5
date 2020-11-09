@@ -8,7 +8,8 @@ import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { TableListItem } from './data.d';
 import { queryRule, updateRule, addRule, removeRule } from './service';
-
+import { Access, useAccess } from 'umi';
+import { Permissions } from '../../../config/permissions';
 /**
  * 添加节点
  * @param fields
@@ -78,6 +79,7 @@ const TableList: React.FC<{}> = () => {
   const actionRef = useRef<ActionType>();
   const [row, setRow] = useState<TableListItem>();
   const [selectedRowsState, setSelectedRows] = useState<TableListItem[]>([]);
+  const access = useAccess();
   const columns: ProColumns<TableListItem>[] = [
     {
       title: '规则名称',
@@ -141,16 +143,20 @@ const TableList: React.FC<{}> = () => {
       valueType: 'option',
       render: (_, record) => (
         <>
-          <a
-            onClick={() => {
-              handleUpdateModalVisible(true);
-              setStepFormValues(record);
-            }}
-          >
-            配置
+          <Access key="edit" accessible={access[Permissions.template.list.edit]}>
+            <a
+              onClick={() => {
+                handleUpdateModalVisible(true);
+                setStepFormValues(record);
+              }}
+            >
+              配置
           </a>
+          </Access>
           <Divider type="vertical" />
-          <a href="">订阅警报</a>
+          <Access key="del" accessible={access[Permissions.template.list.delete]}>
+            <a href="">订阅警报</a>
+          </Access>
         </>
       ),
     },
