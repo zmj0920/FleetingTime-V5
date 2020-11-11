@@ -6,7 +6,8 @@ import Footer from '@/components/Footer';
 import defaultSettings from '../config/defaultSettings';
 import { SmileOutlined, HeartOutlined } from '@ant-design/icons';
 import { getCurrentUser } from '@/services/account';
-import { getLocalStorage } from '@/utils/authority'
+import { getLocalStorage } from '@/utils/authority';
+import { stringify } from 'querystring';
 const IconMap = {
   SmileOutlined: <SmileOutlined />,
   HeartOutlined: <HeartOutlined />,
@@ -14,7 +15,7 @@ const IconMap = {
 
 export async function getInitialState() {
   const tokenStore = getLocalStorage('tokenValue');
-  console.log(tokenStore)
+  console.log(tokenStore);
   try {
     // 未登录的情况
     if (!tokenStore) {
@@ -27,19 +28,16 @@ export async function getInitialState() {
     };
   } catch (error) {
     const { message: errorMessage } = error;
-    const {
-      location: { pathname },
-    } = history;
     // 未登录，处理跳转到登录页面
     if (errorMessage === 'UNLOGIN') {
-      const loginPathName = '/user/login';
-      pathname !== loginPathName &&
-        history.push({
-          pathname: loginPathName,
-          query: {
-            redirect: pathname,
-          },
+      if (history.location.pathname !== '/user/login') {
+        history.replace({
+          pathname: '/user/login',
+          search: stringify({
+            redirect: history.location.pathname,
+          }),
         });
+      }
     }
   }
   return {
@@ -47,25 +45,30 @@ export async function getInitialState() {
   };
 }
 
-const loopMenuItem = (menus) => (
+const loopMenuItem = (menus) =>
   menus.map(({ icon, children, ...item }) => {
     return {
       ...item,
       icon: icon && IconMap[icon],
       children: children && loopMenuItem(children),
-    }
-  })
-);
+    };
+  });
 
-export const layout = ({
-  initialState,
-}) => {
+export const layout = ({ initialState }) => {
   return {
     // menuDataRender: () => loopMenuItem(initialState.menu),
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     footerRender: () => <Footer />,
     menuHeaderRender: undefined,
+    onPageChange: () => {
+      const tokenStore = getLocalStorage('tokenValue');
+      const { location } = history;
+      // 如果没有登录，重定向到 login
+      if (!tokenStore && location.pathname !== '/user/login') {
+        history.push('/user/login');
+      }
+    },
     ...initialState?.settings,
   };
 };
@@ -119,7 +122,7 @@ export const request = {
   timeout: 30000,
   headers: {
     Accept: 'application/json',
-    Authorization: 'Bearer 10000'
+    Authorization: 'Bearer 10000',
   },
   throwErrIfParseFail: true, //当JSON.parse(res) 出错时，抛出错误
 };
