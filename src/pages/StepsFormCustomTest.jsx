@@ -1,6 +1,6 @@
 import React, { Component, createRef } from 'react';
 import { Row, Col, Divider, Form, Input, Icon, Button } from 'antd';
-import StepsFormCustom from '@/customComponents/CustomForm/StepsFormCustom';
+import StepsFormCustom from '@/customComponents/CustomForm/StepsFormCustom/Index';
 import { PlusOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import ProForm, {

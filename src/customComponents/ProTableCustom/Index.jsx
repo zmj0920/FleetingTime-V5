@@ -9,6 +9,7 @@ import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
 
 class ProTableCustom extends PureComponent {
+  
   actionRef = createRef();
   constructor(props) {
     super(props);

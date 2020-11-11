@@ -1,6 +1,6 @@
 import React, { Component, createRef } from 'react';
 import { Row, Col, Divider, Form, Input, Icon, Button } from 'antd';
-import ModalStepsFormCustom from '@/customComponents/CustomForm/ModalStepsFormCustom';
+import ModalStepsFormCustom from '@/customComponents/CustomForm/ModalStepsFormCustom/Index';
 import moment from 'moment';
 import ProForm, {
   StepsForm,

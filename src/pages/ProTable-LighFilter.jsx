@@ -2,7 +2,7 @@ import React, { Component, createRef } from 'react';
 import { request, history } from 'umi';
 import { Row, Col, Divider, Form, Input, Icon, Button, message, Popconfirm, Space } from 'antd';
 import { SettingOutlined, PlusOutlined } from '@ant-design/icons';
-import ProTableCustom from '@/customComponents/ProTableCustom';
+import ProTableCustom from '@/customComponents/ProTableCustom/Index';
 import { testData } from '@/services/user';
 import moment from 'moment';
 import style from './Welcome.less';

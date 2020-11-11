@@ -2,7 +2,7 @@ import React, { Component, createRef } from 'react';
 import { request, history } from 'umi';
 import { Row, Col, Divider, Form, Input, Icon, Button, message, Popconfirm } from 'antd';
 import { SettingOutlined,DownOutlined } from '@ant-design/icons';
-import LightFilterCustom from '@/customComponents/CustomForm/LightFilterCustom';
+import LightFilterCustom from '@/customComponents/CustomForm/LightFilterCustom/Index';
 import { testData } from '@/services/user';
 import moment from 'moment';
 import ProForm, { ProFormText, ProFormDateRangePicker, ProFormSelect } from '@ant-design/pro-form';

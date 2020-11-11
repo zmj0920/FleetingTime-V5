@@ -1,6 +1,6 @@
 import React, { Component, createRef } from 'react';
 import { Row, Col, Divider, Form, Input, Icon, Button, } from 'antd';
-import ProFormCustom from '@/customComponents/CustomForm/ProFormCustom';
+import ProFormCustom from '@/customComponents/CustomForm/ProFormCustom/Index';
 import moment from 'moment';
 import ProForm, { ProFormText, ProFormDateRangePicker, ProFormSelect } from '@ant-design/pro-form';
 import style from './Welcome.less';

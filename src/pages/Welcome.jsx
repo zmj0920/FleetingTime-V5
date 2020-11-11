@@ -7,7 +7,7 @@ import {
   Descriptions,
 } from 'antd';
 import { SettingOutlined, PlusOutlined } from '@ant-design/icons';
-import ProTableCustom from '@/customComponents/ProTableCustom';
+import ProTableCustom from '@/customComponents/ProTableCustom/Index';
 
 import { testData } from '@/services/account';
 import request from 'umi-request';

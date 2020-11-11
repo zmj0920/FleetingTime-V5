@@ -1,6 +1,6 @@
 import React, { Component, createRef } from 'react';
 import { Row, Col, Divider, Form, Input, Icon, Button } from 'antd';
-import ModalFormCustom from '@/customComponents/CustomForm/ModalFormCustom';
+import ModalFormCustom from '@/customComponents/CustomForm/ModalFormCustom/Index';
 import moment from 'moment';
 import ProForm, { ProFormText, ProFormDateRangePicker, ProFormSelect } from '@ant-design/pro-form';
 import { PlusOutlined } from '@ant-design/icons';
