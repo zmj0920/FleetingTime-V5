@@ -134,7 +134,6 @@ export default {
   'POST /api/account/register': (request, response) => {
     response.json(responseWrapper('00000'));
   },
-
   'GET /api/account/outLogin': (req, res) => {
     access = '';
     res.send({
@@ -142,5 +141,4 @@ export default {
       success: true
     });
   },
-
 };

@@ -6,24 +6,24 @@ import Footer from '@/components/Footer';
 import defaultSettings from '../config/defaultSettings';
 import { SmileOutlined, HeartOutlined } from '@ant-design/icons';
 import { getCurrentUser } from '@/services/account';
+import { getLocalStorage } from '@/utils/authority'
 const IconMap = {
   SmileOutlined: <SmileOutlined />,
   HeartOutlined: <HeartOutlined />,
 };
 
 export async function getInitialState() {
-  // const tokenStore = getToken();
+  const tokenStore = getLocalStorage('tokenValue');
+  console.log(tokenStore)
   try {
     // 未登录的情况
-    // if (!tokenStore) {
-    //   throw new Error('UNLOGIN');
-    // }
+    if (!tokenStore) {
+      throw new Error('UNLOGIN');
+    }
     const currentUser = await getCurrentUser();
-    //  const menuData = await getMenuList(currentUser?.userid || '');
     return {
       currentUser,
       settings: defaultSettings,
-      // menu:menuData
     };
   } catch (error) {
     const { message: errorMessage } = error;
@@ -44,11 +44,10 @@ export async function getInitialState() {
   }
   return {
     settings: defaultSettings,
-    // menu: [],
   };
 }
 
-const loopMenuItem = (menus)=> (
+const loopMenuItem = (menus) => (
   menus.map(({ icon, children, ...item }) => {
     return {
       ...item,
@@ -120,7 +119,7 @@ export const request = {
   timeout: 30000,
   headers: {
     Accept: 'application/json',
-    Authorization:'Bearer 10000'
+    Authorization: 'Bearer 10000'
   },
   throwErrIfParseFail: true, //当JSON.parse(res) 出错时，抛出错误
 };

@@ -6,12 +6,14 @@ import { outLogin } from '@/services/account';
 import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
+import { removeLocalStorage } from '@/utils/authority'
 
 /**
  * 退出登录，并且将当前的 url 保存
  */
 const loginOut = async () => {
   await outLogin();
+  removeLocalStorage('tokenValue')
   const { query, pathname } = history.location;
   const { redirect } = query;
   // Note: There may be security issues, please note

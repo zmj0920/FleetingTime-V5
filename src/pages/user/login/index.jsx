@@ -18,11 +18,14 @@ import { useRequest } from 'ahooks';
 import styles from './index.less';
 import { login } from '@/services/account';
 import LoginMessage from '@/customComponents/LoginMessage';
+import { setLocalStorage } from '@/utils/authority'
 /**
  * 此方法会跳转到 redirect 参数所在的位置
  */
 const goto = () => {
-  const { query } = history.location;
+  const {
+    location: { query },
+  } = history;
   history.push(query.redirect || '/');
 };
 
@@ -44,6 +47,7 @@ const Login= () => {
       const { tokenValue,status } = data
       if(status=="ok"){
         if (tokenValue) {
+          setLocalStorage('tokenValue',tokenValue)
           await refresh();
           goto();
         }
