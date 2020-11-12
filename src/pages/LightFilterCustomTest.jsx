@@ -3,7 +3,6 @@ import { request, history } from 'umi';
 import { Row, Col, Divider, Form, Input, Icon, Button, message, Popconfirm } from 'antd';
 import { SettingOutlined,DownOutlined } from '@ant-design/icons';
 import LightFilterCustom from '@/customComponents/CustomForm/LightFilterCustom/Index';
-import { testData } from '@/services/user';
 import moment from 'moment';
 import ProForm, { ProFormText, ProFormDateRangePicker, ProFormSelect } from '@ant-design/pro-form';
 import style from './Welcome.less';
@@ -19,14 +18,6 @@ class LightFilterCustomTest extends LightFilterCustom {
       },
     };
   }
-
-  getApiData = (props) => {
-    const {
-      user: { data },
-    } = props;
-
-    return data;
-  };
 
   handleAdd = (value) => {
     console.log(value);

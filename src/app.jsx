@@ -123,5 +123,5 @@ export const request = {
     Accept: 'application/json',
     Authorization: 'Bearer 10000',
   },
-  throwErrIfParseFail: true, //当JSON.parse(res) 出错时，抛出错误
+  // throwErrIfParseFail: true, //当JSON.parse(res) 出错时，抛出错误
 };

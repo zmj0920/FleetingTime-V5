@@ -18,14 +18,6 @@ class DrawerFormCustomTest extends DrawerFormCustom {
     };
   }
 
-  getApiData = (props) => {
-    const {
-      user: { data },
-    } = props;
-
-    return data;
-  };
-
   handleAdd = (value) => {
     console.log(value);
     if (value) {
