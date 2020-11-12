@@ -1,5 +1,5 @@
 import { PageContainer } from '@ant-design/pro-layout';
-import React, { useState, useEffect, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import { Spin, Row, Col, Button } from 'antd';
 import styles from './index.less';
 import DrawerFormCustomTest from './DrawerFormCustomTest';

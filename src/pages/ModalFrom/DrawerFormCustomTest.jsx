@@ -101,6 +101,31 @@ class DrawerFormCustomTest extends DrawerFormCustom {
             rules={[{ required: true, message: 'Please select your country!' }]}
           />
         </ProForm.Group>
+        <ProForm.Group title="选填信息">
+          <ProFormSelect
+            key="employees_num"
+            fieldKey="employees_num"
+            name="employees_num"
+            label="人数"
+            request={async () => [
+              { value: '1-3人', label: '1-3人' },
+              { value: '4-6人', label: '4-6人' },
+              { value: '7-10人', label: '7-10人' },
+            ]}
+          />
+
+          <ProFormSelect
+            key="production_process"
+            fieldKey="production_process"
+            name="production_process"
+            label="区域"
+            request={async () => [
+              { value: '全国', label: '全国' },
+              { value: '江苏', label: '江苏' },
+              { value: '浙江', label: '浙江' },
+            ]}
+          />
+        </ProForm.Group>
         <ProForm.Group title="项目信息">
           <ProFormText width="s" name="id" label="主合同编号" />
           <ProFormText name="project" disabled label="项目名称" initialValue="xxxx项目" />

@@ -15,7 +15,6 @@ const IconMap = {
 
 export async function getInitialState() {
   const tokenStore = getLocalStorage('tokenValue');
-  console.log(tokenStore);
   try {
     // 未登录的情况
     if (!tokenStore) {

@@ -13,10 +13,9 @@ import React, { useState } from 'react';
 import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
 import Footer from '@/components/Footer';
-import {  getFakeCaptcha, LoginParamsType } from '@/services/login';
 import { useRequest } from 'ahooks';
 import styles from './index.less';
-import { login } from '@/services/account';
+import { login, getFakeCaptcha } from '@/services/account';
 import LoginMessage from '@/customComponents/LoginMessage';
 import { setLocalStorage } from '@/utils/authority'
 /**
@@ -29,7 +28,7 @@ const goto = () => {
   history.push(query.redirect || '/');
 };
 
-const Login= () => {
+const Login = () => {
   const [userLoginState, setUserLoginState] = useState({});
   const [type, setType] = useState('account');
   const intl = useIntl();
@@ -44,14 +43,14 @@ const Login= () => {
     let value = Object.assign(values, { type })
     run(value).then(async (data) => {
       setUserLoginState(data)
-      const { tokenValue,status } = data
-      if(status=="ok"){
+      const { tokenValue, status } = data
+      if (status == "ok") {
         if (tokenValue) {
-          setLocalStorage('tokenValue',tokenValue)
+          setLocalStorage('tokenValue', tokenValue)
           await refresh();
           goto();
         }
-      }else{
+      } else {
         message.error('登录失败，请重试！');
       }
     });

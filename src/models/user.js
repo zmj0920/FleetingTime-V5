@@ -1,4 +1,4 @@
-import * as userService from '@/services/user';
+import * as userService from '@/services/account';
 import { useRequest } from 'ahooks';
 import { useCallback } from 'react';
 

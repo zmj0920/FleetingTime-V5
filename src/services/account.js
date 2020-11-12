@@ -20,12 +20,27 @@ export async function register(params) {
 }
 
 export async function testData(params) {
-  return request('/api/test', {
+  return request(`${API_PREFIX}test`, {
     method: 'POST',
     data: params,
   });
 }
 
 export async function outLogin() {
-  return request('/api/account/outLogin');
+  return request(`${API_PREFIX}account/outLogin`);
+}
+
+export async function getMenuList(params) {
+  return request(`${API_PREFIX}account/get_menu`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+export async function getFakeCaptcha(mobile) {
+  return request(`${API_PREFIX}login/captcha?mobile=${mobile}`);
+}
+
+export async function queryNotices() {
+  return request(`${API_PREFIX}notices`);
 }

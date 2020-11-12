@@ -1,3 +1,6 @@
+import {
+  Permissions
+} from '../config/permissions'
 const {
   ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION
 } = process.env;
@@ -49,29 +52,29 @@ export default {
       title: '交互专家',
       group: '蚂蚁金服－某某某事业群－某某平台部－某某技术部－UED',
       tags: [{
-          key: '0',
-          label: '很有想法的',
-        },
-        {
-          key: '1',
-          label: '专注设计',
-        },
-        {
-          key: '2',
-          label: '辣~',
-        },
-        {
-          key: '3',
-          label: '大长腿',
-        },
-        {
-          key: '4',
-          label: '川妹子',
-        },
-        {
-          key: '5',
-          label: '海纳百川',
-        },
+        key: '0',
+        label: '很有想法的',
+      },
+      {
+        key: '1',
+        label: '专注设计',
+      },
+      {
+        key: '2',
+        label: '辣~',
+      },
+      {
+        key: '3',
+        label: '大长腿',
+      },
+      {
+        key: '4',
+        label: '川妹子',
+      },
+      {
+        key: '5',
+        label: '海纳百川',
+      },
       ],
       notifyCount: 12,
       unreadCount: 11,
@@ -116,7 +119,7 @@ export default {
       return;
     }
     if (type === 'mobile') {
-      if ( mobile === '13525378372' && captcha === "6666") {
+      if (mobile === '13525378372' && captcha === "6666") {
         const tokenValue = username === 'user' ? '00000' : '10000';
         res.json({
           status: 'ok',
@@ -141,4 +144,90 @@ export default {
       success: true
     });
   },
+  'POST /api/account/get_menu': (req, res) => {
+    const result = {
+      "code": 0,
+      "message": "response successful",
+      "data": [
+        {
+          path: '/',
+          redirect: '/welcome',
+        },
+        {
+          path: '/user',
+          layout: false,
+          children: [{
+            name: 'login',
+            path: '/user/login',
+            component: './user/login',
+            children:null
+          },],
+        },
+        {
+          path: '/welcome',
+          name: 'welcome',
+          icon: 'smile',
+          access: Permissions.template.welcome.index,
+          component: './Welcome',
+          children: null
+        },
+        // {
+        //   path: '/account',
+        //   name: 'account',
+        //   icon: 'smile',
+        //   children: [
+        //     {
+        //       name: 'settings',
+        //       icon: 'smile',
+        //       path: '/account/settings',
+        //       component: './AccountSettings',
+        //       children: null
+        //     },
+        //   ],
+        // },
+        {
+          path: '/admin',
+          name: 'admin',
+          icon: 'crown',
+          access: Permissions.template.admin.index,
+          component: './Admin',
+          children: [{
+            path: '/admin/sub-page',
+            name: 'sub-page',
+            access: Permissions.template.admin.list.index,
+            icon: 'smile',
+            component: './Welcome',
+            children:null
+          },],
+        },
+        {
+          path: '/list',
+          icon: 'table',
+          name: 'list',
+          children: [
+            {
+              name: 'table-list',
+              icon: 'table',
+              access: Permissions.template.list.index,
+              path: '/list/table-list',
+              component: './ListTableList',
+              children:null
+            },
+
+          ],
+        },
+        {
+          name: 'modalfrom',
+          icon: 'smile',
+          path: '/modalfrom',
+          component: './ModalFrom',
+          children:null
+        },
+        {
+          component: './404',
+        },
+      ]
+    }
+    return res.json(result);
+  }
 };

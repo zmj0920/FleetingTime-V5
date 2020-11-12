@@ -2,7 +2,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { Divider } from 'antd';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useModel } from 'umi';
-import { queryNotices } from '@/services/user'
+import { queryNotices } from '@/services/account'
 
 export default () => {
   const { countrys } = useModel('user', (model) => ({
