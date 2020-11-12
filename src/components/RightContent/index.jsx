@@ -4,6 +4,7 @@ import React from 'react';
 import { useModel, SelectLang } from 'umi';
 import Avatar from './AvatarDropdown';
 import HeaderSearch from '../HeaderSearch';
+import NoticeIcon from '../NoticeIcon'
 import styles from './index.less';
 
 const ENVTagColor = {
@@ -60,6 +61,7 @@ const GlobalHeaderRight = () => {
           <QuestionCircleOutlined />
         </span>
       </Tooltip>
+      <NoticeIcon/>
       <Avatar />
       {REACT_APP_ENV && (
         <span>

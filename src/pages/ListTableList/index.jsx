@@ -176,10 +176,10 @@ class Index extends ProTableCustom {
       hideInForm: false,
       initialValue: ['1', '2'],
       // initialValue: 0, //多选
-      // valueType: 'select', // 表单类型和request一起使用
+      //  valueType: 'select', // 表单类型和request一起使用
       // valueType: 'radio', //单选状态
-      // valueType: 'radioButton', //单选按钮状态
-      valueType: 'checkbox', //多选
+      //  valueType: 'radioButton', //单选按钮状态
+       valueType: 'checkbox', //多选
       valueEnum: {
         0: { text: '关闭', status: 'Default' },
         1: { text: '运行中', status: 'Processing' },
