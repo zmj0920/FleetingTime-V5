@@ -7,9 +7,10 @@ import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
+import TableTools from './/components/TableTools'
 
-class ProTableCustom extends PureComponent {
-  
+class ProTableCustom extends TableTools {
+
   actionRef = createRef();
   constructor(props) {
     super(props);
@@ -96,10 +97,10 @@ class ProTableCustom extends PureComponent {
   };
 
   /* 表单提交 */
-  handleAdd = (value) => {};
+  handleAdd = (value) => { };
 
   /* 修改表单提交 */
-  handleUpdate = (value) => {};
+  handleUpdate = (value) => { };
 
   /**
    * 修改方法获取数据更新
@@ -195,10 +196,8 @@ class ProTableCustom extends PureComponent {
     },
   ];
 
-  /**
-   * 转化 moment 格式数据为特定类型，false 不做转化
-   */
-  dateFormatter = 'string';
+
+
 
   /**
    * 表头
@@ -446,7 +445,7 @@ class ProTableCustom extends PureComponent {
   /**
    * 数据加载失败
    */
-  onRequestError = (error) => {};
+  onRequestError = (error) => { };
 
   /**
    * 渲染表格请求函数
@@ -521,7 +520,14 @@ class ProTableCustom extends PureComponent {
       showExpandedRowRender: showExpandedRowRenderOption,
       tableScroll, // 固定表格设置滚动条长度
       rowKey,
+      dateFormatter: dateFormatterOption
     } = this.state;
+
+    /**
+    * 转化 moment 格式数据为特定类型，false 不做转化
+    */
+    const dateFormatter = dateFormatterOption || 'string'
+
 
     const showSelect = showSelectOption || false;
 
@@ -531,9 +537,9 @@ class ProTableCustom extends PureComponent {
     const rowSelection = !showSelect
       ? false
       : {
-          selectedRowKeys,
-          onChange: this.handleSelectRows,
-        };
+        selectedRowKeys,
+        onChange: this.handleSelectRows,
+      };
 
     const showExpandedRowRender = showExpandedRowRenderOption || false;
 
@@ -543,8 +549,11 @@ class ProTableCustom extends PureComponent {
     const expandable = !showExpandedRowRender
       ? false
       : {
-          expandedRowRender: this.expandedRowRender,
-        };
+        expandedRowRender: this.expandedRowRender,
+      };
+
+
+
 
     /**
      * 扩展配置
@@ -556,7 +565,7 @@ class ProTableCustom extends PureComponent {
       options: this.options,
       postData: this.postFn,
       dataSource: this.dataSource,
-      dateFormatter: this.dateFormatter,
+      dateFormatter: dateFormatter,
       tableAlertOptionRender: this.tableAlertOptionRender,
       toolBarRender: this.toolBarRender,
       beforeSearchSubmit: this.beforeSearchSubmit,

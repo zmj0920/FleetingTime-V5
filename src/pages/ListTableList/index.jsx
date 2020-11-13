@@ -23,7 +23,7 @@ class Index extends ProTableCustom {
       ...{
         dataLoading: false,
         showSelect: true,
-        // showExpandedRowRender:true
+        // showExpandedRowRender:true,
         tableScroll: { x: 1300 },
       },
     };
@@ -37,7 +37,9 @@ class Index extends ProTableCustom {
   };
 
 
-  handleDelete = (value) => { };
+  handleDelete = (value) => { 
+    console.log(value)
+  };
 
   getRequest = (params, sorter, filter) => {
     let paramsData = Object.assign(params, sorter, filter)
@@ -82,6 +84,13 @@ class Index extends ProTableCustom {
       //     valueType: 'text',
       //   },
       // ],
+    },
+    {
+      title: '城市',
+      dataIndex: 'city',
+      width: 60,
+      align: 'center',
+      hideInForm: true,
     },
     {
       title: '描述',
@@ -173,13 +182,13 @@ class Index extends ProTableCustom {
       width: 100,
       align: 'center',
       filters: true,
-      hideInForm: false,
+      hideInForm: true,
       initialValue: ['1', '2'],
       // initialValue: 0, //多选
       //  valueType: 'select', // 表单类型和request一起使用
       // valueType: 'radio', //单选状态
-      //  valueType: 'radioButton', //单选按钮状态
-       valueType: 'checkbox', //多选
+        valueType: 'radioButton', //单选按钮状态
+      //  valueType: 'checkbox', //多选
       valueEnum: {
         0: { text: '关闭', status: 'Default' },
         1: { text: '运行中', status: 'Processing' },
@@ -245,7 +254,7 @@ class Index extends ProTableCustom {
           <Popconfirm
             placement="top"
             title="确定要删除吗？"
-            onConfirm={this.handleDelete(record)}
+            onConfirm={()=>this.handleDelete(record)}
             okText="确定"
             cancelText="取消"
           >
