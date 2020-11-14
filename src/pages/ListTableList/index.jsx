@@ -6,14 +6,25 @@ import {
   Space,
   Descriptions,
 } from 'antd';
-import { SettingOutlined, PlusOutlined } from '@ant-design/icons';
+import { SettingOutlined, PlusOutlined, DownOutlined } from '@ant-design/icons';
 import ProTableCustom from '@/customComponents/ProTableCustom/Index';
-import LightFilterCustomTest from '@/pages/LightFilterCustomTest'
+import LightFilterCustom from '@/customComponents/CustomForm/LightFilterCustom/LightFilterCustom'
 import { testData } from '@/services/account';
 import request from 'umi-request';
 import moment from 'moment';
 import style from '@/pages/Welcome.less';
 import ProCard from '@ant-design/pro-card';
+import {
+  ProFormText,
+  ProFormDatePicker,
+  ProFormSelect,
+  ProFormDigit,
+  ProFormSwitch,
+  ProFormDateRangePicker,
+  ProFormDateTimePicker,
+  ProFormTimePicker,
+  ProFormSlider,
+} from '@ant-design/pro-form';
 
 class Index extends ProTableCustom {
   constructor(props) {
@@ -25,6 +36,9 @@ class Index extends ProTableCustom {
         showSelect: true,
         // showExpandedRowRender:true,
         tableScroll: { x: 1300 },
+        showFooterToolbar: false,
+        dateFormatter: false,
+        // showTableAlertOptionRender:false
       },
     };
   }
@@ -36,8 +50,10 @@ class Index extends ProTableCustom {
     }
   };
 
-
-  handleDelete = (value) => { 
+  handleUpdate = (value) => {
+    console.log(value)
+  }
+  handleDelete = (value) => {
     console.log(value)
   };
 
@@ -187,7 +203,7 @@ class Index extends ProTableCustom {
       // initialValue: 0, //多选
       //  valueType: 'select', // 表单类型和request一起使用
       // valueType: 'radio', //单选状态
-        valueType: 'radioButton', //单选按钮状态
+      valueType: 'radioButton', //单选按钮状态
       //  valueType: 'checkbox', //多选
       valueEnum: {
         0: { text: '关闭', status: 'Default' },
@@ -254,7 +270,7 @@ class Index extends ProTableCustom {
           <Popconfirm
             placement="top"
             title="确定要删除吗？"
-            onConfirm={()=>this.handleDelete(record)}
+            onConfirm={() => this.handleDelete(record)}
             okText="确定"
             cancelText="取消"
           >
@@ -274,19 +290,63 @@ class Index extends ProTableCustom {
     },
   ];
 
-  headerTitle = () => {
+  onLightFilterFinish = (value) => {
+    console.log(value)
+  }
+
+  /**
+ * 表单内容
+ */
+  lightFilterFrom = () => {
     return (
-      <Space>
-        <LightFilterCustomTest />
-      </Space>
+      <>
+        <ProFormSelect
+          name="sex"
+          label="性别"
+          showSearch
+          valueEnum={{
+            man: '男',
+            woman: '女',
+          }}
+        />
+        <ProFormSelect
+          name="area"
+          label="地区"
+          mode="multiple"
+          valueEnum={{
+            beijing: '北京',
+            shanghai: '上海',
+            hangzhou: '杭州',
+            long: '这是一个很长的用来测试溢出的项目',
+          }}
+        />
+        <ProFormDigit name="count" label="数量" />
+        <ProFormSlider name="range" label="范围" range />
+        <ProFormText name="name1" label="名称" />
+        <ProFormSwitch name="open" label="开关" />
+        <ProFormText name="name2" label="地址" />
+        <ProFormDatePicker name="name3" label="日期" />
+        <ProFormDateRangePicker name="date" label="日期范围" />
+        <ProFormDateTimePicker name="datetime" label="日期时间" />
+        <ProFormTimePicker name="time" label="时间" />
+      </>
     );
   };
 
-  // renderCustomFormContent = () => {
-  //   return (
-  //     <LightFilterCustomTest />
-  //   )
-  // }
+  collapseLabel = () => {
+    return (<>更多筛选 <DownOutlined /></>)
+  }
+  headerTitle = () => {
+    return (
+      <Space>
+        <LightFilterCustom
+          lightFilterFrom={this.lightFilterFrom()}
+          // collapseLabel={this.collapseLabel}
+          onLightFilterFinish={this.onLightFilterFinish}
+        />
+      </Space>
+    );
+  };
 }
 
 export default Index;

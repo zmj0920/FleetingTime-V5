@@ -5,7 +5,7 @@ import styles from './index.less';
 import DrawerFormCustomTest from './DrawerFormCustomTest';
 import ModalFormCustomTest from './ModalFormCustomTest';
 import ModalStepsFormCustomTest from './ModalStepsFormCustomTest';
-import LightFilterCustomTest from './LightFilterCustomTest';
+
 import { PlusOutlined } from '@ant-design/icons';
 class index extends PureComponent {
   constructor(props) {
@@ -36,7 +36,6 @@ class index extends PureComponent {
             <ModalStepsFormCustomTest />
           </Col>
           <Col md={6}>
-            <LightFilterCustomTest />
           </Col>
         </Row>
       </PageContainer>

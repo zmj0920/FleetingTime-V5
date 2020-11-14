@@ -12,7 +12,6 @@ const UpdateForm = (props) => {
     for (let index = 0; index < columns.length; index++) {
       const dataIndex = columns[index].dataIndex;
       if (key == dataIndex) {
-        
         if (columns[index].valueType === "dateTimeRange") {
           props.children.props.columns[index]['initialValue'] = [moment(arr[i][0]), moment(arr[i][1])]
         } else {

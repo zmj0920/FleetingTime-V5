@@ -15,11 +15,11 @@ class ProTableCustom extends TableTools {
   constructor(props) {
     super(props);
     this.state = {
-      createModalVisible: false,
-      updateModalVisible: false,
-      updateFormValues: null,
-      selectedRows: [],
-      selectedRowKeys: [],
+      // createModalVisible: false,
+      // updateModalVisible: false,
+      // updateFormValues: null,
+      // selectedRows: [],
+      // selectedRowKeys: [],
     };
   }
 
@@ -63,7 +63,7 @@ class ProTableCustom extends TableTools {
    * @param {选择的行数据*} selectedRows
    */
   handleSelectRows = (selectedRowKeys, selectedRows) => {
-    // console.log(selectedRowKeys);
+     console.log(selectedRowKeys);
 
     this.setState({
       selectedRows: selectedRows,
@@ -80,21 +80,6 @@ class ProTableCustom extends TableTools {
 
   //重写表格列表配置
   getColumn = () => [];
-
-  /**
-   * 新增弹框
-   */
-  onAdd = (visible) => {
-    this.setState({ createModalVisible: visible });
-  };
-
-  /**
-   * 修改表单弹窗
-   * @param {} visible
-   */
-  onUpdate = (visible) => {
-    this.setState({ updateModalVisible: visible });
-  };
 
   /* 表单提交 */
   handleAdd = (value) => { };
@@ -128,7 +113,7 @@ class ProTableCustom extends TableTools {
   tableAlertOptionRender = ({ selectedRowKeys, selectedRows, onCleanSelected }) => {
     return (
       <Space size={16}>
-        <a>导出数据</a>
+        {/* <a>导出数据</a> */}
         <a style={{ marginLeft: 8 }} onClick={onCleanSelected}>
           取消选择
         </a>
@@ -198,12 +183,6 @@ class ProTableCustom extends TableTools {
 
 
 
-
-  /**
-   * 表头
-   */
-  headerTitle = () => '高级表格';
-
   /**
    * 对request 请求数据进行处理
    * @param {*} data
@@ -226,22 +205,7 @@ class ProTableCustom extends TableTools {
     return params;
   };
 
-  /**
-   * table 工具栏，设为 false 时不显示
-   */
-  options = { fullScreen: true, reload: true, setting: true, search: true };
 
-  /**
-   * 不同屏幕显示方式
-   */
-  defaultColConfig = {
-    xs: 24,
-    sm: 24,
-    md: 12,
-    lg: 12,
-    xl: 8,
-    xxl: 6,
-  };
 
   /**
    * 设置搜索显示不显示search=false
@@ -420,21 +384,6 @@ class ProTableCustom extends TableTools {
    */
   tableExtraRender = (_, data) => {
     return null;
-    // return (
-    //   <>
-    //     <ProCard>
-    //       <Descriptions size="small" column={3}>
-    //         <Descriptions.Item label="Row">{data.length}</Descriptions.Item>
-    //         <Descriptions.Item label="Created">Lili Qu</Descriptions.Item>
-    //         <Descriptions.Item label="Association">
-    //           <a>421421</a>
-    //         </Descriptions.Item>
-    //         <Descriptions.Item label="Creation Time">2017-01-10</Descriptions.Item>
-    //         <Descriptions.Item label="Effective Time">2017-10-10</Descriptions.Item>
-    //       </Descriptions>
-    //     </ProCard>
-    //   </>
-    // )
   };
 
   /**
@@ -454,11 +403,6 @@ class ProTableCustom extends TableTools {
   getRequest = (params, sorter, filter) => {
     // return testData({ ...params })
   };
-
-  /**
-   * 扩展表单
-   */
-  renderCustomFormContent = () => null;
 
   /**
    * 自定义logo
@@ -484,9 +428,9 @@ class ProTableCustom extends TableTools {
                 {selectedRowKeys.length}
               </a>{' '}
               项&nbsp;&nbsp;
-              <span>
+              {/* <span>
                 服务调用次数总计 {selectedRows.reduce((pre, item) => pre + item.callNo, 0)} 万
-              </span>
+              </span> */}
             </div>
           }
         >
@@ -504,12 +448,10 @@ class ProTableCustom extends TableTools {
     );
   };
 
-  /**
-   * 头部显示内容配置
-   */
-  pageHeaderContent = () => null;
+
 
   render() {
+
     const {
       createModalVisible,
       updateModalVisible,
@@ -518,9 +460,12 @@ class ProTableCustom extends TableTools {
       pageName,
       showSelect: showSelectOption,
       showExpandedRowRender: showExpandedRowRenderOption,
+      dateFormatter: dateFormatterOption,
+      showFooterToolbar, //默认显示底部批量操作，设置false不显示
       tableScroll, // 固定表格设置滚动条长度
       rowKey,
-      dateFormatter: dateFormatterOption
+      showTableAlertOptionRender
+
     } = this.state;
 
     /**
@@ -528,12 +473,11 @@ class ProTableCustom extends TableTools {
     */
     const dateFormatter = dateFormatterOption || 'string'
 
-
-    const showSelect = showSelectOption || false;
-
     /**
      * 多选配置 state  showSelect 配置true显示默认隐藏
      */
+    const showSelect = showSelectOption || false;
+
     const rowSelection = !showSelect
       ? false
       : {
@@ -541,11 +485,13 @@ class ProTableCustom extends TableTools {
         onChange: this.handleSelectRows,
       };
 
-    const showExpandedRowRender = showExpandedRowRenderOption || false;
+
 
     /**
      * 嵌套表格state  showExpandedRowRender 配置true显示默认隐藏
      */
+    const showExpandedRowRender = showExpandedRowRenderOption || false;
+
     const expandable = !showExpandedRowRender
       ? false
       : {
@@ -566,7 +512,7 @@ class ProTableCustom extends TableTools {
       postData: this.postFn,
       dataSource: this.dataSource,
       dateFormatter: dateFormatter,
-      tableAlertOptionRender: this.tableAlertOptionRender,
+      tableAlertOptionRender:  showTableAlertOptionRender === false ? null : this.tableAlertOptionRender,
       toolBarRender: this.toolBarRender,
       beforeSearchSubmit: this.beforeSearchSubmit,
       form: this.form,
@@ -575,63 +521,70 @@ class ProTableCustom extends TableTools {
       tableExtraRender: this.tableExtraRender,
       params: this.params,
       onRequestError: this.onRequestError,
-    };
+  };
 
-    return (
+  const getColumn = this.getColumn()
+
+  return(
       <>
-        <PageContainer
-          title={pageName}
-          avatar={{ src: this.pageHeaderLogo() }}
-          content={this.pageHeaderContent()}
-        >
-          {this.renderCustomFormContent()}
-          <ProTable
-            {...standardTableCustomOption}
-            columns={this.getColumn()}
-            request={(params, sorter, filter) => this.getRequest(params, sorter, filter)}
-            rowKey={rowKey || 'key'}
-            headerTitle={this.headerTitle()}
-            rowSelection={rowSelection}
-            expandable={expandable}
-            actionRef={this.actionRef}
-          />
-          <CreateForm
-            onCancel={() => this.onAdd(false)}
-            modalVisible={createModalVisible}
-            modalTitle={'新建表单'}
-          >
-            <ProTable
-              onSubmit={(value) => {
-                this.handleAdd(value);
-              }}
-              rowKey="key"
-              type="form"
-              columns={this.getColumn()}
-            />
-          </CreateForm>
-          {this.footerToolbar()}
-          {updateFormValues && Object.keys(updateFormValues).length ? (
-            <UpdateForm
-              onCancel={() => {
-                this.onUpdate(false);
-                this.setUpdateFormValues([]);
-              }}
-              modalTitle={'修改表单'}
-              updateModalVisible={updateModalVisible}
-            >
-              <ProTable
-                onSubmit={(value) => {
-                  this.handleUpdate(value);
-                }}
-                rowKey="key"
-                type="form"
-                values={updateFormValues}
-                columns={this.getColumn()}
-              />
-            </UpdateForm>
-          ) : null}
-          <BackTop />
-        </PageContainer>
+  <PageContainer
+    title={pageName}
+    avatar={{ src: this.pageHeaderLogo() }}
+    content={this.pageHeaderContent()}
+  >
+    {this.renderCustomFormContent()}
+    {
+      getColumn.length > 0 ? (
+        <ProTable
+          {...standardTableCustomOption}
+          columns={this.getColumn()}
+          request={(params, sorter, filter) => this.getRequest(params, sorter, filter)}
+          rowKey={rowKey || 'key'}
+          headerTitle={this.headerTitle()}
+          rowSelection={rowSelection}
+          expandable={expandable}
+          actionRef={this.actionRef}
+
+        />
+      ) : null
+    }
+    <CreateForm
+      onCancel={() => this.onAdd(false)}
+      modalVisible={createModalVisible}
+      modalTitle={'新建表单'}
+    >
+      <ProTable
+        onSubmit={(value) => {
+          this.handleAdd(value);
+        }}
+        rowKey="key"
+        type="form"
+        columns={this.getColumn()}
+      />
+    </CreateForm>
+    {showFooterToolbar === false ? null : this.footerToolbar()}
+    {updateFormValues && Object.keys(updateFormValues).length ? (
+      <UpdateForm
+        onCancel={() => {
+          this.onUpdate(false);
+          this.setUpdateFormValues([]);
+        }}
+        modalTitle={'修改表单'}
+        updateModalVisible={updateModalVisible}
+      >
+        <ProTable
+          onSubmit={(value) => {
+            this.handleUpdate(value);
+          }}
+          rowKey="key"
+          type="form"
+          values={updateFormValues}
+          columns={this.getColumn()}
+        />
+      </UpdateForm>
+    ) : null}
+    <BackTop />
+  </PageContainer>
       </>
     );
   }
