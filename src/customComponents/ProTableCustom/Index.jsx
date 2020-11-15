@@ -1,6 +1,6 @@
-import { PureComponent, createRef } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, Badge, Space, BackTop, Tag, message, Input, Descriptions } from 'antd';
+import React, { PureComponent, createRef, CSSProperties } from 'react';
+import { PlusOutlined, MailOutlined } from '@ant-design/icons';
+import { Button, Badge, Space, BackTop, Tag, message, Input, Descriptions, Menu } from 'antd';
 import { LightFilter, ProFormDatePicker } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
@@ -8,107 +8,30 @@ import ProTable from '@ant-design/pro-table';
 import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
 import TableTools from './/components/TableTools'
+import styles from './index.less'
 
 class ProTableCustom extends TableTools {
 
-  actionRef = createRef();
   constructor(props) {
     super(props);
     this.state = {
-      // createModalVisible: false,
-      // updateModalVisible: false,
-      // updateFormValues: null,
-      // selectedRows: [],
-      // selectedRowKeys: [],
+      ...this.state
     };
   }
 
   /**
-   * 加载更多
-   */
-  fetchMore = () => {
-    if (this.actionRef.current) {
-      this.actionRef.current.fetchMore();
-    }
-  };
-
-  //刷新数据
-  reloadData = () => {
-    if (this.actionRef.current) {
-      this.actionRef.current.reload();
-    }
-  };
+  * Table action 的引用，便于自定义触发
+  */
+  actionRef = createRef();
 
   /**
-   * 重置到默认状态
+   * 可以获取到查询表单的 form 实例，用于一些灵活的配置
    */
-  fromReset = () => {
-    if (this.actionRef.current) {
-      this.actionRef.current.reset();
-    }
-  };
+  formRef = createRef();
 
   /**
-   * 清空选中项
-   */
-  clearSelected = () => {
-    if (this.actionRef.current) {
-      this.actionRef.current.clearSelected();
-    }
-  };
-
-  /**
-   * 批量操作选择
-   * @param {选择key*} selectedRowKeys
-   * @param {选择的行数据*} selectedRows
-   */
-  handleSelectRows = (selectedRowKeys, selectedRows) => {
-     console.log(selectedRowKeys);
-
-    this.setState({
-      selectedRows: selectedRows,
-      selectedRowKeys,
-    });
-  };
-
-  /**
-   * 清空选择数据
-   */
-  cleanSelectedRows = () => {
-    this.setState({ selectedRows: [] });
-  };
-
-  //重写表格列表配置
-  getColumn = () => [];
-
-  /* 表单提交 */
-  handleAdd = (value) => { };
-
-  /* 修改表单提交 */
-  handleUpdate = (value) => { };
-
-  /**
-   * 修改方法获取数据更新
-   * @param {*} record
-   */
-  setUpdateFormValues = (record) => {
-    this.setState({
-      updateFormValues: record,
-    });
-  };
-
-  /**
-   * 批量删除
-   */
-  handleBatchDelete = (selectedRowKeys, selectedRows) => {
-    console.log(selectedRowKeys);
-    this.cleanSelectedRows();
-    this.actionRef.current?.reloadAndRest?.();
-  };
-
-  /**
-   * 自定义批量操作工具栏右侧选项区域, false 时不显示
-   * @param {*} param0
+   * 自定义 table 的 alert
+   * 设置或者返回false 即可关闭
    */
   tableAlertOptionRender = ({ selectedRowKeys, selectedRows, onCleanSelected }) => {
     return (
@@ -122,66 +45,9 @@ class ProTableCustom extends TableTools {
   };
 
   /**
-   * 自定义批量操作工具栏左侧信息区域, false 时不显示
-   */
-  toolBarRender = () => {
-    return [
-      <Button type="primary" key="newButton" onClick={() => this.onAdd(true)}>
-        <PlusOutlined /> 新建
-      </Button>,
-    ];
-  };
-
-  /**
-   * 分页配置 false 不显示分页
-   */
-  // pagination = true
-
-  /**
-   * 分页配置
-   */
-  pagination = {
-    showQuickJumper: false, //是否显示跳转页
-    pageSize: 10, //配置默认显示数据条数
-  };
-
-  /**
    * 表格数据配置
    */
-  dataSource = [
-    {
-      id: 99,
-      key: 99,
-      disabled: false,
-      href: 'https://ant.design',
-      avatar: 'https://gw.alipayobjects.com/zos/rmsportal/udxAbMEhpwthVVcjLXik.png',
-      name: 'TradeCode 99',
-      owner: '曲丽丽',
-      desc: '这是一段描述',
-      callNo: 510,
-      status: 2,
-      updatedAt: '2020-10-26T06:34:17.289Z',
-      createdAt: '2020-10-26T06:34:17.289Z',
-      progress: 19,
-    },
-    {
-      id: 98,
-      key: 98,
-      disabled: false,
-      href: 'https://ant.design',
-      avatar: 'https://gw.alipayobjects.com/zos/rmsportal/eeHMaZBwmTvLdIwMfBpg.png',
-      name: 'TradeCode 98',
-      owner: '曲丽丽',
-      desc: '这是一段描述',
-      callNo: 416,
-      status: 1,
-      updatedAt: '2020-10-26T06:34:17.289Z',
-      createdAt: '2020-10-26T06:34:17.289Z',
-      progress: 97,
-    },
-  ];
-
-
+  dataSource = [];
 
   /**
    * 对request 请求数据进行处理
@@ -196,59 +62,82 @@ class ProTableCustom extends TableTools {
     return array;
   };
 
-  /**
-   * 搜索前处理操作
-   * @param {搜索参数} params
-   */
-  beforeSearchSubmit = (params) => {
-    // console.log(params)
-    return params;
-  };
-
-
 
   /**
    * 设置搜索显示不显示search=false
    */
-  search = {
+
+  tableSearchProps = {
     labelWidth: 120, //标签的宽度
     span: this.defaultColConfig, //搜索栏显示方式
-    // searchText:'搜索',
-    //resetText：'重置',
-    // submitText:'提交'
-    // defaultCollapsed: false,//设置面板默认值
-    // filterType: 'light',//轻量级表格查询配置
-    // collapsed:false,  //是否收起
-    //是否收起事件
-    // onCollapse: (collapsed)=>{
-    //    console.log(collapsed)
-    // },
-    //搜索栏工具重写
-    // optionRender: ({ searchText, resetText }, { form }) => [
-    //   <Button
-    //     key="searchText"
-    //     type="primary"
-    //     onClick={() => {
-    //       form?.submit();
-    //     }}
-    //   >
-    //     {searchText}
-    //   </Button>,
-    //   <Button
-    //     key="resetText"
-    //     onClick={() => {
-    //       form?.resetFields();
-    //     }}
-    //   >
-    //     {resetText}
-    //   </Button>,
-    //   <Button key="out">导出</Button>,
-    // ],
-    //收起按钮配置
-    // collapseRender: (collapsed, showCollapseButton) => {
-    //   return null
-    // }
-  };
+    searchText: '搜索',
+    resetText: '重置',
+    defaultCollapsed: true,//设置面板默认值
+  }
+
+  /**
+   * 搜索按钮菜单重写
+   * @param {*} param0 
+   * @param {*} param1 
+   */
+  optionRender = () => {
+    return [
+      <Button key="out">导出</Button>,
+    ]
+  }
+
+  onCollapse = (collapsed) => {
+    this.setState({
+      collapsedState: collapsed
+    })
+    console.log(collapsed)
+  }
+
+  // collapseRender = (collapsed, showCollapseButton) => {
+  //   console.log(collapsed)
+  //   return (
+  //     <div>
+  //       {showCollapseButton.submitter}
+  //     </div>
+  //   )
+  // }
+
+  tableSearch = () => {
+    const { collapsedState, showCollapseRender } = this.props
+    return {
+      ...this.tableSearchProps,
+      //搜索栏工具重写
+      optionRender: ({ searchText, resetText }, { form }) => {
+        return [
+          <Button
+            key="searchText"
+            type="primary"
+            onClick={() => {
+              form?.submit();
+            }}
+          >
+            {searchText}
+          </Button>,
+          <Button
+            key="resetText"
+            onClick={() => {
+              form?.resetFields();
+            }}
+          >
+            {resetText}
+          </Button>,
+          ...this.optionRender(),
+        ]
+      },
+      collapsed: collapsedState,  //是否收起
+      // // 是否收起事件
+      onCollapse: this.onCollapse,
+      // //收起按钮配置
+      // collapseRender: this.collapseRender
+    };
+  }
+
+
 
   /**
    * 搜索表单数据获取antd form 的配置
@@ -257,13 +146,6 @@ class ProTableCustom extends TableTools {
     onValuesChange: (values, all) => {
       console.log(values, all);
     },
-  };
-
-  /**
-   * 重置表单事件
-   */
-  resetFn = () => {
-    console.log('重置表单');
   };
 
   /**
@@ -327,55 +209,127 @@ class ProTableCustom extends TableTools {
   );
 
   /**
-   * 自定义工具栏渲染
+   * toolbar工具栏配置filter
    */
-  // toolbar = {
-  //   multipleLine: true,
-  //   filter: (
-  //     <LightFilter
-  //       style={{
-  //         marginTop: 8,
-  //       }}
-  //     >
-  //       <ProFormDatePicker name="startdate" label="响应日期" />
-  //     </LightFilter>
-  //   ),
-  //   tabs: {
-  //     items: [
-  //       {
-  //         key: 'tab1',
-  //         tab: '标签一',
-  //       },
-  //       {
-  //         key: 'tab2',
-  //         tab: '标签二',
-  //       },
-  //     ],
-  //   },
-  //   menu: {
-  //     type: 'inline',
-  //     items: [
-  //       {
-  //         label: <span>全部应用{this.renderBadge(101)}</span>,
-  //         key: 'all',
-  //       },
-  //       {
-  //         label: <span>我创建的应用{this.renderBadge(3)}</span>,
-  //         key: 'todo',
-  //       },
-  //     ],
-  //   },
-  //   actions: [
-  //     <Button key="primary" type="primary">
-  //       新建应用
-  //     </Button>,
-  //   ],
-  // }
+  toolbarFilter = () => {
+    return (
+      <LightFilter
+        style={{
+          marginTop: 8,
+        }}
+      >
+        <ProFormDatePicker name="startdate" label="响应日期" />
+      </LightFilter>
+    )
+  }
+
+  /**
+   * toolbar工具栏配置tabs配置
+   */
+  toolbarTabs = () => {
+    return {
+      onChange: (activeKey) => {
+        console.log(activeKey)
+      },
+      activeKey: 'tab2',
+      items: [
+        {
+          key: 'tab1',
+          tab: '标签一',
+        },
+        {
+          key: 'tab2',
+          tab: '标签二',
+        },
+      ],
+    }
+  }
+
+  /**
+   * toolbar工具栏actions配置
+   */
+  toolbarActions = () => {
+    return [
+      <Button type="primary" key="newButton" onClick={() => this.onAdd(true)}>
+        <PlusOutlined /> 新建
+     </Button>,
+    ]
+  }
+
+  /**
+   * toolbar 菜单配置
+   */
+  toolbarMeun = () => {
+    return {
+      type: 'dropdown', //'inline' | 'dropdown'
+      // activeKey: 'todo',
+      onChange: (activeKey) => {
+        this.activeKey = activeKey
+        console.log(activeKey)
+      },
+      items: [
+        {
+          label: <span>全部应用{this.renderBadge(101)}</span>,
+          key: 'all',
+        },
+        {
+          label: <span>我创建的应用{this.renderBadge(3)}</span>,
+          key: 'todo',
+        },
+      ],
+    }
+  }
+
+  /**
+   * 全局搜索事件
+   * @param {*} keyWords 
+   */
+  onSearchKeyWords = (keyWords) => {
+    console.log(keyWords)
+  }
+
+  /**
+   * toolbar 搜索显示配置 
+   */
+  toolbarSearch = {
+    loading: false,
+    enterButton: '搜索',
+    placeholder: "input search text",
+    allowClear: true,
+    style: { width: 300 },
+    size: 'default'
+  }
 
   /**
    * 自定义工具栏渲染
    */
-  toolbar = false;
+  toolbar = () => {
+
+    /**
+     * showToolbarSearch 设置fales不显示
+     * toolbarTitle 一级标题
+     * toolbarSubTitle 二级标题
+     * toolbarTooltip 提示语
+     * toolbarMultipleLine  multipleLine 是否换行
+     */
+    const { showToolbarSearch, toolbarTitle, toolbarTooltip, toolbarSubTitle, toolbarMultipleLine } = this.state
+
+    return {
+      title: toolbarTitle,
+      tooltip: toolbarTooltip,
+      search: showToolbarSearch === false ? false : this.toolbarSearch,
+      onSearch: (keyWords) => {
+        this.onSearchKeyWords(keyWords)
+      },
+      subTitle: toolbarSubTitle,
+      multipleLine: toolbarMultipleLine === false ? false : true,//控制是否换行显示
+      filter: this.toolbarFilter(),
+      tabs: this.toolbarTabs(),
+      menu: this.toolbarMeun(),
+      actions: this.toolbarActions(),
+    }
+
+  }
 
   /**
    * 配置主题显示数据
@@ -390,11 +344,6 @@ class ProTableCustom extends TableTools {
    * 用于查询多余参数
    */
   params = {};
-
-  /**
-   * 数据加载失败
-   */
-  onRequestError = (error) => { };
 
   /**
    * 渲染表格请求函数
@@ -413,6 +362,11 @@ class ProTableCustom extends TableTools {
    * 批量操作
    */
   footerToolbar = () => {
+
+    /**
+     * selectedRowKeys 选key中值
+     * selectedRows 选中 Row值
+     */
     const { selectedRowKeys, selectedRows } = this.state;
     return (
       selectedRows?.length > 0 && (
@@ -448,58 +402,83 @@ class ProTableCustom extends TableTools {
     );
   };
 
+  /**
+   * 表格主体自定义
+   * @param {*} _ 
+   * @param {*} dom 
+   */
+  tableRender = (_, dom) => {
+    return (
+      <div
+        style={{
+          display: 'flex'
+        }}
+      >
+        <Menu
+          // onSelect={
 
+          // }
+          defaultSelectedKeys={['1']}
+          defaultOpenKeys={['sub1']}
+          mode="inline"
+        >
+          <Menu.SubMenu
+            key="sub1"
+            title={
+              <span>
+                <MailOutlined />
+                <span>Navigation One</span>
+              </span>
+            }
+          >
+            <Menu.ItemGroup key="g1" title="Item 1">
+              <Menu.Item key="1">Option 1</Menu.Item>
+              <Menu.Item key="2">Option 2</Menu.Item>
+            </Menu.ItemGroup>
+            <Menu.ItemGroup key="g2" title="Item 2">
+              <Menu.Item key="3">Option 3</Menu.Item>
+              <Menu.Item key="4">Option 4</Menu.Item>
+            </Menu.ItemGroup>
+          </Menu.SubMenu>
+        </Menu>
+        <div
+          style={{
+            width: '80%'
+          }}
+        >
+          {dom}
+        </div>
+      </div>
+    )
+  }
 
   render() {
 
+    /**
+     * showExpandedRowRender 嵌套表格state  showExpandedRowRender 配置true显示默认隐藏
+     * dateFormatter  string 会格式化为 YYYY-DD-MM number 代表时间戳
+     * showFooterToolbar 默认显示底部批量操作，设置false不显示
+     * tableScroll  固定表格设置滚动条长度
+     * showTableAlertOptionRender 选中显示  Alert 设置false不显示
+     * showTableRender  表格主题显示扩展
+     * manualRequest  是否需要手动触发首次请求, 配置为 true的时候手动发送请求
+     */
     const {
       createModalVisible,
       updateModalVisible,
       updateFormValues,
       selectedRowKeys,
       pageName,
-      showSelect: showSelectOption,
-      showExpandedRowRender: showExpandedRowRenderOption,
-      dateFormatter: dateFormatterOption,
-      showFooterToolbar, //默认显示底部批量操作，设置false不显示
-      tableScroll, // 固定表格设置滚动条长度
+      showSelect,
+      showExpandedRowRender,
+      dateFormatter,
+      showFooterToolbar,
+      tableScroll,
       rowKey,
-      showTableAlertOptionRender
-
+      showTableAlertOptionRender,
+      showTableRender,
+      getManualRequest
     } = this.state;
-
-    /**
-    * 转化 moment 格式数据为特定类型，false 不做转化
-    */
-    const dateFormatter = dateFormatterOption || 'string'
-
-    /**
-     * 多选配置 state  showSelect 配置true显示默认隐藏
-     */
-    const showSelect = showSelectOption || false;
-
-    const rowSelection = !showSelect
-      ? false
-      : {
-        selectedRowKeys,
-        onChange: this.handleSelectRows,
-      };
-
-
-
-    /**
-     * 嵌套表格state  showExpandedRowRender 配置true显示默认隐藏
-     */
-    const showExpandedRowRender = showExpandedRowRenderOption || false;
-
-    const expandable = !showExpandedRowRender
-      ? false
-      : {
-        expandedRowRender: this.expandedRowRender,
-      };
-
-
-
 
     /**
      * 扩展配置
@@ -507,84 +486,99 @@ class ProTableCustom extends TableTools {
     const standardTableCustomOption = {
       scroll: tableScroll,
       pagination: this.pagination,
-      search: this.search,
+      search: this.tableSearch(),
       options: this.options,
       postData: this.postFn,
       dataSource: this.dataSource,
-      dateFormatter: dateFormatter,
-      tableAlertOptionRender:  showTableAlertOptionRender === false ? null : this.tableAlertOptionRender,
-      toolBarRender: this.toolBarRender,
+      dateFormatter: dateFormatter ? dateFormatter : 'string',
+      tableAlertOptionRender: showTableAlertOptionRender === false ? false : this.tableAlertOptionRender,
       beforeSearchSubmit: this.beforeSearchSubmit,
       form: this.form,
       onReset: this.resetFn,
-      toolbar: this.toolbar,
+      toolbar: this.toolbar(),
       tableExtraRender: this.tableExtraRender,
       params: this.params,
       onRequestError: this.onRequestError,
-  };
+      // manualRequest: getManualRequest === true ? true : false
+    };
 
-  const getColumn = this.getColumn()
+    const getColumn = this.getColumn()
 
-  return(
+    return (
       <>
-  <PageContainer
-    title={pageName}
-    avatar={{ src: this.pageHeaderLogo() }}
-    content={this.pageHeaderContent()}
-  >
-    {this.renderCustomFormContent()}
-    {
-      getColumn.length > 0 ? (
-        <ProTable
-          {...standardTableCustomOption}
-          columns={this.getColumn()}
-          request={(params, sorter, filter) => this.getRequest(params, sorter, filter)}
-          rowKey={rowKey || 'key'}
-          headerTitle={this.headerTitle()}
-          rowSelection={rowSelection}
-          expandable={expandable}
-          actionRef={this.actionRef}
-
-        />
-      ) : null
-    }
-    <CreateForm
-      onCancel={() => this.onAdd(false)}
-      modalVisible={createModalVisible}
-      modalTitle={'新建表单'}
-    >
-      <ProTable
-        onSubmit={(value) => {
-          this.handleAdd(value);
-        }}
-        rowKey="key"
-        type="form"
-        columns={this.getColumn()}
-      />
-    </CreateForm>
-    {showFooterToolbar === false ? null : this.footerToolbar()}
-    {updateFormValues && Object.keys(updateFormValues).length ? (
-      <UpdateForm
-        onCancel={() => {
-          this.onUpdate(false);
-          this.setUpdateFormValues([]);
-        }}
-        modalTitle={'修改表单'}
-        updateModalVisible={updateModalVisible}
-      >
-        <ProTable
-          onSubmit={(value) => {
-            this.handleUpdate(value);
-          }}
-          rowKey="key"
-          type="form"
-          values={updateFormValues}
-          columns={this.getColumn()}
-        />
-      </UpdateForm>
-    ) : null}
-    <BackTop />
-  </PageContainer>
+        <PageContainer
+          title={pageName}
+          avatar={{ src: this.pageHeaderLogo() }}
+          content={this.pageHeaderContent()}
+        >
+          {this.renderCustomFormContent()}
+          {
+            getColumn.length > 0 ? (
+              <ProTable
+                {...standardTableCustomOption}
+                columns={this.getColumn()}
+                request={(params, sorter, filter) => this.getRequest(params, sorter, filter)}
+                rowKey={rowKey || 'key'}
+                headerTitle={this.headerTitle()}
+                rowSelection={
+                  showSelect === true ? {
+                    selectedRowKeys,
+                    onChange: this.handleSelectRows,
+                  } : false
+                }
+                expandable={
+                  showExpandedRowRender === true ? {
+                    expandedRowRender: this.expandedRowRender,
+                  } : false
+                }
+                actionRef={this.actionRef}
+                formRef={this.formRef}
+                tableRender={showTableRender === true ? this.tableRender : false}
+                onSizeChange={
+                  (size) => {
+                    console.log(size)
+                  }
+                }
+              />
+            ) : null
+          }
+          <CreateForm
+            onCancel={() => this.onAdd(false)}
+            modalVisible={createModalVisible}
+            modalTitle={'新建表单'}
+          >
+            <ProTable
+              onSubmit={(value) => {
+                this.handleAdd(value);
+              }}
+              rowKey="key"
+              type="form"
+              columns={this.getColumn()}
+            />
+          </CreateForm>
+          {showFooterToolbar === false ? null : this.footerToolbar()}
+          {updateFormValues && Object.keys(updateFormValues).length ? (
+            <UpdateForm
+              onCancel={() => {
+                this.onUpdate(false);
+                this.setUpdateFormValues([]);
+              }}
+              modalTitle={'修改表单'}
+              updateModalVisible={updateModalVisible}
+            >
+              <ProTable
+                onSubmit={(value) => {
+                  this.handleUpdate(value);
+                }}
+                rowKey="key"
+                type="form"
+                values={updateFormValues}
+                columns={this.getColumn()}
+              />
+            </UpdateForm>
+          ) : null}
+          <BackTop />
+        </PageContainer>
       </>
     );
   }

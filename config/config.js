@@ -87,6 +87,6 @@ export default defineConfig({
   manifest: {
     basePath: '/',
   },
-  exportStatic: {},
-  chainWebpack
+  // exportStatic: {},
+  // chainWebpack
 });

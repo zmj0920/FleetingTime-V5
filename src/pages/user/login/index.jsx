@@ -116,6 +116,7 @@ const Login = () => {
                   id: 'pages.login.accountLogin.errorMessage',
                   defaultMessage: '账户或密码错误（admin/ant.design)',
                 })}
+                type="error"
               />
             )}
             {type === 'account' && (
@@ -167,7 +168,7 @@ const Login = () => {
               </>
             )}
 
-            {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}
+            {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" type="error"/>}
             {type === 'mobile' && (
               <>
                 <ProFormText

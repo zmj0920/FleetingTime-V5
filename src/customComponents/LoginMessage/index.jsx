@@ -1,11 +1,11 @@
 import { Alert } from 'antd';
-const LoginMessage = ({ content }) => (
+const LoginMessage = ({ content,type }) => (
   <Alert
     style={{
       marginBottom: 24,
     }}
     message={content}
-    type="error"
+    type={type}
     showIcon
   />
 );
