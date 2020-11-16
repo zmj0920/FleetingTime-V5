@@ -306,15 +306,14 @@ class ProTableCustom extends TableTools {
 
     /**
      * showToolbarSearch 设置fales不显示
-     * toolbarTitle 一级标题
      * toolbarSubTitle 二级标题
      * toolbarTooltip 提示语
      * toolbarMultipleLine  multipleLine 是否换行
      */
-    const { showToolbarSearch, toolbarTitle, toolbarTooltip, toolbarSubTitle, toolbarMultipleLine } = this.state
+    const { showToolbarSearch, toolbarTooltip, toolbarSubTitle, toolbarMultipleLine } = this.state
 
     return {
-      title: toolbarTitle,
+      title: this.headerTitle(),
       tooltip: toolbarTooltip,
       search: showToolbarSearch === false ? false : this.toolbarSearch,
       onSearch: (keyWords) => {
@@ -454,10 +453,18 @@ class ProTableCustom extends TableTools {
   render() {
 
     /**
+     * createModalVisible  新建弹窗表单Visible
+     * updateModalVisible  更新弹窗表单 Visible
+     * updateFormValues    获取更新数据 values 
+     * selectedRows        表格多选行数据
+     * selectedRowKeys     表格多选key值
+     * pageName            设置头部显示标题
+     * showSelect          设置是否开启多选 true时开启
      * showExpandedRowRender 嵌套表格state  showExpandedRowRender 配置true显示默认隐藏
      * dateFormatter  string 会格式化为 YYYY-DD-MM number 代表时间戳
      * showFooterToolbar 默认显示底部批量操作，设置false不显示
      * tableScroll  固定表格设置滚动条长度
+     * rowKey        设置Key 值字段
      * showTableAlertOptionRender 选中显示  Alert 设置false不显示
      * showTableRender  表格主题显示扩展
      * manualRequest  是否需要手动触发首次请求, 配置为 true的时候手动发送请求

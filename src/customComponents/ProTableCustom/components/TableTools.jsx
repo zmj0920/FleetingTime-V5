@@ -6,10 +6,30 @@ class TableTools extends PureComponent {
         super(props);
         this.state = {
             ...this.state,
+
+            /**
+             * 新建弹窗表单Visible
+             */
             createModalVisible: false,
+
+            /**
+             * 更新弹窗表单 Visible
+             */
             updateModalVisible: false,
+
+            /**
+             * 获取更新数据 values 
+             */
             updateFormValues: null,
+
+            /**
+             * 表格多选行数据
+             */
             selectedRows: [],
+
+            /**
+             * 表格多选key值
+             */
             selectedRowKeys: [],
         };
     }

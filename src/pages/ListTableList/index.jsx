@@ -36,15 +36,15 @@ class Index extends ProTableCustom {
         showSelect: true,
         // showExpandedRowRender:true,
         tableScroll: { x: 1300 },
-        showFooterToolbar: false,
+        // showFooterToolbar: false,
         dateFormatter: false,
-        showTableAlertOptionRender: false,
+        // showTableAlertOptionRender: false,
         // showTableRender:true,
         // showToolbarSearch: false
         // dateFormatter: 'number'
         // manualRequest: true,
         // collapsedState: false,
-        showCollapseRender: false
+        showCollapseRender: false,
       },
     };
   }
@@ -71,22 +71,22 @@ class Index extends ProTableCustom {
     return testData({ ...paramsData });
   };
 
-  tableExtraRender = (_, data) => {
-    return (
-      <>
-        <ProCard>
-          <Descriptions size="small" column={3}>
-            <Descriptions.Item label="Row">{data.length}</Descriptions.Item>
-            <Descriptions.Item label="Created">Lili Qu</Descriptions.Item>
-            <Descriptions.Item label="Association">
-            </Descriptions.Item>
-            <Descriptions.Item label="Creation Time">2017-01-10</Descriptions.Item>
-            <Descriptions.Item label="Effective Time">2017-10-10</Descriptions.Item>
-          </Descriptions>
-        </ProCard>
-      </>
-    );
-  };
+  // tableExtraRender = (_, data) => {
+  //   return (
+  //     <>
+  //       <ProCard>
+  //         <Descriptions size="small" column={3}>
+  //           <Descriptions.Item label="Row">{data.length}</Descriptions.Item>
+  //           <Descriptions.Item label="Created">Lili Qu</Descriptions.Item>
+  //           <Descriptions.Item label="Association">
+  //           </Descriptions.Item>
+  //           <Descriptions.Item label="Creation Time">2017-01-10</Descriptions.Item>
+  //           <Descriptions.Item label="Effective Time">2017-10-10</Descriptions.Item>
+  //         </Descriptions>
+  //       </ProCard>
+  //     </>
+  //   );
+  // };
 
   params = { age: 20 };
 
@@ -261,8 +261,8 @@ class Index extends ProTableCustom {
   }
 
   /**
- * 表单内容
- */
+   * 表单内容
+   */
   lightFilterFrom = () => {
     return (
       <>
@@ -302,16 +302,16 @@ class Index extends ProTableCustom {
   collapseLabel = () => {
     return (<>更多筛选 <DownOutlined /></>)
   }
-  
-  headerTitle = () => {
+
+  toolbarFilter = () => {
     return (
-      <Space>
-        {/* <LightFilterCustom
+      <div>
+        <LightFilterCustom
           lightFilterFrom={this.lightFilterFrom()}
           // collapseLabel={this.collapseLabel}
           onLightFilterFinish={this.onLightFilterFinish}
-        /> */}
-      </Space>
+        />
+      </div>
     );
   };
 }
