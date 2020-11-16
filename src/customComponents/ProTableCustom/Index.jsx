@@ -66,7 +66,6 @@ class ProTableCustom extends TableTools {
   /**
    * 设置搜索显示不显示search=false
    */
-
   tableSearchProps = {
     labelWidth: 120, //标签的宽度
     span: this.defaultColConfig, //搜索栏显示方式
@@ -477,7 +476,7 @@ class ProTableCustom extends TableTools {
       rowKey,
       showTableAlertOptionRender,
       showTableRender,
-      getManualRequest
+      manualRequest
     } = this.state;
 
     /**
@@ -499,7 +498,7 @@ class ProTableCustom extends TableTools {
       tableExtraRender: this.tableExtraRender,
       params: this.params,
       onRequestError: this.onRequestError,
-      // manualRequest: getManualRequest === true ? true : false
+      manualRequest: manualRequest === true ? true : false
     };
 
     const getColumn = this.getColumn()

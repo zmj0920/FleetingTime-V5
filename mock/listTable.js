@@ -6,6 +6,7 @@ const genList = (pageNo, pageSize) => {
     tableListDataSource.push({
       id: i,
       key: index,
+      money: 1000,
       disabled: i % 6 === 0,
       href: 'https://ant.design',
       avatar: [
