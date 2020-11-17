@@ -55,7 +55,7 @@
     "@ant-design/pro-table": "^2.10.1",
     "@umijs/route-utils": "^1.0.34",
     "ahooks": "^2.9.1",
-    "antd": "^4.8.2",
+    "antd": "^4.8.4",
     "classnames": "^2.2.6",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",

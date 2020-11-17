@@ -44,7 +44,7 @@ class Index extends ProTableCustom {
         // dateFormatter: 'number'
         // manualRequest: true,
         // collapsedState: false,
-        showCollapseRender: false,
+        // showCollapseRender: false,
       },
     };
   }

@@ -79,7 +79,7 @@ class TableTools extends PureComponent {
     /*
     * 左上角的 title
     */
-    headerTitle = () => '高级表格';
+    headerTitle = () => null;
 
     /*
      * 数据加载失败
