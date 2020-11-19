@@ -5,6 +5,7 @@ import styles from './index.less';
 import DrawerFormCustomTest from './DrawerFormCustomTest';
 import ModalFormCustomTest from './ModalFormCustomTest';
 import ModalStepsFormCustomTest from './ModalStepsFormCustomTest';
+import ProFormCustomTest from './ProFormCustomTest'
 
 import { PlusOutlined } from '@ant-design/icons';
 class index extends PureComponent {
@@ -37,6 +38,9 @@ class index extends PureComponent {
           </Col>
           <Col md={6}>
           </Col>
+        </Row>
+        <Row style={{marginTop:"100px"}}>
+          <ProFormCustomTest/>
         </Row>
       </PageContainer>
     );

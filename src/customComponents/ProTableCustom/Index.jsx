@@ -1,5 +1,5 @@
 import React, { PureComponent, createRef, CSSProperties } from 'react';
-import { PlusOutlined, MailOutlined } from '@ant-design/icons';
+import { PlusOutlined, MailOutlined, DownOutlined } from '@ant-design/icons';
 import { Button, Badge, Space, BackTop, Tag, message, Input, Descriptions, Menu } from 'antd';
 import { LightFilter, ProFormDatePicker } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
@@ -7,7 +7,7 @@ import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
-import TableTools from './/components/TableTools'
+import TableTools from './components/TableTools'
 import styles from './index.less'
 
 class ProTableCustom extends TableTools {
@@ -64,7 +64,7 @@ class ProTableCustom extends TableTools {
 
 
   /**
-   * 设置搜索显示不显示search=false
+   * 搜索工具栏基础配置
    */
   tableSearchProps = {
     labelWidth: 120, //标签的宽度
@@ -85,22 +85,54 @@ class ProTableCustom extends TableTools {
     ]
   }
 
+  /**
+   * 展开收起
+   * @param {*} collapsed 
+   */
   onCollapse = (collapsed) => {
     this.setState({
       collapsedState: collapsed
-    })
-    console.log(collapsed)
+    });
   }
 
-  // collapseRender = (collapsed, showCollapseButton) => {
-  //   console.log(collapsed)
-  //   return (
-  //     <div>
-  //       {showCollapseButton.submitter}
-  //     </div>
-  //   )
-  // }
+  /**
+   * 展开收起菜单
+   * @param {*} collapsed 
+   * @param {*} _ 
+   * @param {*} intl 
+   */
+  collapseRender = (collapsed, _, intl) => {
+    if (collapsed) {
+      return (
+        <>
+          {intl.getMessage('tableForm.collapsed', '展开')}
+          <DownOutlined
+            style={{
+              marginLeft: '0.5em',
+              transition: '0.3s all',
+              transform: `rotate(${collapsed ? 0 : 0.5}turn)`,
+            }}
+          />
+        </>
+      );
+    }
+    return (
+      <>
+        {intl.getMessage('tableForm.expand', '收起')}
+        <DownOutlined
+          style={{
+            marginLeft: '0.5em',
+            transition: '0.3s all',
+            transform: `rotate(${collapsed ? 0 : 0.5}turn)`,
+          }}
+        />
+      </>
+    );
+  };
 
+  /**
+   * 搜索工具栏配置
+   */
   tableSearch = () => {
     const { collapsedState, showCollapseRender } = this.props
     return {
@@ -129,10 +161,10 @@ class ProTableCustom extends TableTools {
         ]
       },
       collapsed: collapsedState,  //是否收起
-      // // 是否收起事件
+      //  是否收起事件
       onCollapse: this.onCollapse,
-      // //收起按钮配置
-      // collapseRender: this.collapseRender
+      // 收起按钮配置
+      collapseRender: this.collapseRender
     };
   }
 
@@ -325,8 +357,17 @@ class ProTableCustom extends TableTools {
       tabs: this.toolbarTabs(),
       menu: this.toolbarMeun(),
       actions: this.toolbarActions(),
+      // settings: [
+      //   {
+      //     icon: <SettingOutlined />,
+      //     tooltip: '设置',
+      //   },
+      //   {
+      //     icon: <FullscreenOutlined />,
+      //     tooltip: '全屏',
+      //   },
+      // ],
     }
-
   }
 
   /**
@@ -354,7 +395,7 @@ class ProTableCustom extends TableTools {
   /**
    * 自定义logo
    */
-  pageHeaderLogo = () => 'https://avatars1.githubusercontent.com/u/8186664?s=460&v=4';
+  pageHeaderLogo = () => null;
 
   /**
    * 批量操作
@@ -453,7 +494,7 @@ class ProTableCustom extends TableTools {
   render() {
 
     /**
-     * createModalVisible  新建弹窗表单Visible
+     * createModalVisible  新建弹窗表单 Visible
      * updateModalVisible  更新弹窗表单 Visible
      * updateFormValues    获取更新数据 values 
      * selectedRows        表格多选行数据
@@ -468,6 +509,8 @@ class ProTableCustom extends TableTools {
      * showTableAlertOptionRender 选中显示  Alert 设置false不显示
      * showTableRender  表格主题显示扩展
      * manualRequest  是否需要手动触发首次请求, 配置为 true的时候手动发送请求
+     * showSearch      是否显示表格搜索工具栏false不显示
+     * showPageContainer 是否显示头部header 设置 false不显示
      */
     const {
       createModalVisible,
@@ -481,9 +524,11 @@ class ProTableCustom extends TableTools {
       showFooterToolbar,
       tableScroll,
       rowKey,
-      showTableAlertOptionRender,
+      showTableAlertRender,
       showTableRender,
-      manualRequest
+      manualRequest,
+      showSearch,
+      showPageContainer
     } = this.state;
 
     /**
@@ -492,12 +537,13 @@ class ProTableCustom extends TableTools {
     const standardTableCustomOption = {
       scroll: tableScroll,
       pagination: this.pagination,
-      search: this.tableSearch(),
+      search: showSearch === false ? false : this.tableSearch(),
       options: this.options,
       postData: this.postFn,
       dataSource: this.dataSource,
       dateFormatter: dateFormatter ? dateFormatter : 'string',
-      tableAlertOptionRender: showTableAlertOptionRender === false ? false : this.tableAlertOptionRender,
+      tableAlerRender: showTableAlertRender === false ? false : true,
+      tableAlertOptionRender:  this.tableAlertOptionRender,
       beforeSearchSubmit: this.beforeSearchSubmit,
       form: this.form,
       onReset: this.resetFn,
@@ -509,12 +555,84 @@ class ProTableCustom extends TableTools {
     };
 
     const getColumn = this.getColumn()
-
+    if (showPageContainer === false) {
+      return (
+        <>
+          {this.renderCustomFormContent()}
+          {
+            getColumn.length > 0 ? (
+              <ProTable
+                {...standardTableCustomOption}
+                columns={this.getColumn()}
+                request={(params, sorter, filter) => this.getRequest(params, sorter, filter)}
+                rowKey={rowKey || 'key'}
+                headerTitle={this.headerTitle()}
+                rowSelection={
+                  showSelect === true ? {
+                    selectedRowKeys,
+                    onChange: this.handleSelectRows,
+                  } : false
+                }
+                expandable={
+                  showExpandedRowRender === true ? {
+                    expandedRowRender: this.expandedRowRender,
+                  } : false
+                }
+                actionRef={this.actionRef}
+                formRef={this.formRef}
+                tableRender={showTableRender === true ? this.tableRender : false}
+                onSizeChange={
+                  (size) => {
+                    console.log(size)
+                  }
+                }
+              />
+            ) : null
+          }
+          <CreateForm
+            onCancel={() => this.onAdd(false)}
+            modalVisible={createModalVisible}
+            modalTitle={'新建表单'}
+          >
+            <ProTable
+              onSubmit={(value) => {
+                this.handleAdd(value);
+              }}
+              rowKey="key"
+              type="form"
+              columns={this.getColumn()}
+            />
+          </CreateForm>
+          {showFooterToolbar === false ? null : this.footerToolbar()}
+          {updateFormValues && Object.keys(updateFormValues).length ? (
+            <UpdateForm
+              onCancel={() => {
+                this.onUpdate(false);
+                this.setUpdateFormValues([]);
+              }}
+              modalTitle={'修改表单'}
+              updateModalVisible={updateModalVisible}
+            >
+              <ProTable
+                onSubmit={(value) => {
+                  this.handleUpdate(value);
+                }}
+                rowKey="key"
+                type="form"
+                values={updateFormValues}
+                columns={this.getColumn()}
+              />
+            </UpdateForm>
+          ) : null}
+          <BackTop />
+        </>
+      );
+    }
     return (
       <>
         <PageContainer
           title={pageName}
-          avatar={{ src: this.pageHeaderLogo() }}
+          avatar={this.pageHeaderLogo() ? { src: this.pageHeaderLogo() } : false}
           content={this.pageHeaderContent()}
         >
           {this.renderCustomFormContent()}

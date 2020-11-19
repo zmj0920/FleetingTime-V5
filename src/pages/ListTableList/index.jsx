@@ -38,16 +38,20 @@ class Index extends ProTableCustom {
         tableScroll: { x: 1300 },
         // showFooterToolbar: false,
         dateFormatter: false,
-        // showTableAlertOptionRender: false,
+        showTableAlertRender: false,
         // showTableRender:true,
         // showToolbarSearch: false
         // dateFormatter: 'number'
         // manualRequest: true,
         // collapsedState: false,
         // showCollapseRender: false,
+        // showSearch:false,
+        // showPageContainer:false
       },
     };
   }
+
+  pageHeaderLogo = () => 'https://avatars1.githubusercontent.com/u/8186664?s=460&v=4';
 
   handleAdd = (value) => {
     console.log(this.formRef);
@@ -59,9 +63,12 @@ class Index extends ProTableCustom {
     }
   };
 
+
   handleUpdate = (value) => {
     console.log(value)
   }
+
+
   handleDelete = (value) => {
     console.log(value)
   };
@@ -314,6 +321,9 @@ class Index extends ProTableCustom {
       </div>
     );
   };
+
+
+  
 }
 
 export default Index;

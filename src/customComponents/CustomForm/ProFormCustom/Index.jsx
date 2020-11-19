@@ -6,12 +6,16 @@ import styles from './index.less';
 import ProCard from '@ant-design/pro-card';
 
 class ProFormCustom extends PureComponent {
-  formRef = createRef();
 
   constructor(props) {
     super(props);
     this.state = {};
   }
+
+  /**
+ * 可以获取到查询表单的 form 实例，用于一些灵活的配置
+ */
+  formRef = createRef();
 
   /**
    * 自定义logo
@@ -54,7 +58,7 @@ class ProFormCustom extends PureComponent {
         >
           重置
         </Button>,
-        <Button id="submit" key="submit" type="primary" onClick={(e) => {}}>
+        <Button id="submit" key="submit" type="primary" onClick={(e) => { }}>
           重置测试
         </Button>,
       ];
@@ -65,7 +69,7 @@ class ProFormCustom extends PureComponent {
    * 表单提交事件
    * @param {提交参数} values
    */
-  onFinish = async (values) => {
+  handleAdd = async (values) => {
     message.success('提交成功！');
   };
 
@@ -89,6 +93,15 @@ class ProFormCustom extends PureComponent {
    */
   renderOther = () => null;
 
+  /**
+   * 重置表单
+   */
+  resetFields = () => {
+    if (this.formRef.current) {
+      this.formRef.current.resetFields()
+    }
+  }
+
   render() {
     const { pageName } = this.state;
     return (
@@ -102,8 +115,9 @@ class ProFormCustom extends PureComponent {
             formRef={this.formRef}
             initialValues={this.initialValues}
             submitter={this.submitter}
-            onFinish={this.onFinish}
+            onFinish={this.handleAdd}
             dateFormatter={this.dateFormatter}
+            formRef={this.formRef}
           >
             {this.formContent()}
           </ProForm>
