@@ -98,9 +98,16 @@ class Index extends ProTableCustom {
   params = { age: 20 };
 
   getColumn = () => [
+
+
     {
       title: '编号',
       dataIndex: 'id',
+      width: 60,
+      valueType: 'indexBorder'
+    },
+    {
+      title: '标题',
       width: 60,
       align: 'center',
       hideInForm: true,
@@ -126,6 +133,7 @@ class Index extends ProTableCustom {
       width: 60,
       align: 'center',
       hideInForm: true,
+
     },
     {
       title: '描述',
@@ -323,7 +331,7 @@ class Index extends ProTableCustom {
   };
 
 
-  
+
 }
 
 export default Index;

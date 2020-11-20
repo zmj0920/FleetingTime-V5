@@ -5,7 +5,7 @@ import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import defaultSettings from '../config/defaultSettings';
 import { SmileOutlined, HeartOutlined } from '@ant-design/icons';
-import { getCurrentUser } from '@/services/account';
+import { getCurrentUser, getMenuList } from '@/services/account';
 import { getLocalStorage } from '@/utils/authority';
 import { stringify } from 'querystring';
 const IconMap = {
@@ -21,8 +21,10 @@ export async function getInitialState() {
       throw new Error('UNLOGIN');
     }
     const currentUser = await getCurrentUser();
+    const meun = await getMenuList()
     return {
       currentUser,
+      meun,
       settings: defaultSettings,
     };
   } catch (error) {
@@ -44,7 +46,9 @@ export async function getInitialState() {
   };
 }
 
-const loopMenuItem = (menus) =>
+const loopMenuItem = (menuData) => {
+  let menus = menuData.meun["data"]
+  console.log(menus)
   menus.map(({ icon, children, ...item }) => {
     return {
       ...item,
@@ -52,10 +56,12 @@ const loopMenuItem = (menus) =>
       children: children && loopMenuItem(children),
     };
   });
+}
+
 
 export const layout = ({ initialState }) => {
   return {
-    // menuDataRender: () => loopMenuItem(initialState.menu),
+    // menuDataRender: () => loopMenuItem(initialState),
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     footerRender: () => <Footer />,

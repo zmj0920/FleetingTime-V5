@@ -146,9 +146,9 @@ export default {
   },
   'POST /api/account/get_menu': (req, res) => {
     const result = {
-      "code": 0,
-      "message": "response successful",
-      "data": [
+      status: 'ok',
+      message: "response successful",
+      data: [
         {
           path: '/',
           redirect: '/welcome',
