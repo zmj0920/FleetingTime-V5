@@ -76,8 +76,8 @@ class ProTableCustom extends TableTools {
 
   /**
    * 搜索按钮菜单重写
-   * @param {*} param0 
-   * @param {*} param1 
+   * @param {*} param0
+   * @param {*} param1
    */
   optionRender = () => {
     return [
@@ -87,7 +87,7 @@ class ProTableCustom extends TableTools {
 
   /**
    * 展开收起
-   * @param {*} collapsed 
+   * @param {*} collapsed
    */
   onCollapse = (collapsed) => {
     this.setState({
@@ -97,9 +97,9 @@ class ProTableCustom extends TableTools {
 
   /**
    * 展开收起菜单
-   * @param {*} collapsed 
-   * @param {*} _ 
-   * @param {*} intl 
+   * @param {*} collapsed
+   * @param {*} _
+   * @param {*} intl
    */
   collapseRender = (collapsed, _, intl) => {
     if (collapsed) {
@@ -313,14 +313,14 @@ class ProTableCustom extends TableTools {
 
   /**
    * 全局搜索事件
-   * @param {*} keyWords 
+   * @param {*} keyWords
    */
   onSearchKeyWords = (keyWords) => {
     console.log(keyWords)
   }
 
   /**
-   * toolbar 搜索显示配置 
+   * toolbar 搜索显示配置
    */
   toolbarSearch = {
     loading: false,
@@ -443,8 +443,8 @@ class ProTableCustom extends TableTools {
 
   /**
    * 表格主体自定义
-   * @param {*} _ 
-   * @param {*} dom 
+   * @param {*} _
+   * @param {*} dom
    */
   tableRender = (_, dom) => {
     return (
@@ -496,7 +496,7 @@ class ProTableCustom extends TableTools {
     /**
      * createModalVisible  新建弹窗表单 Visible
      * updateModalVisible  更新弹窗表单 Visible
-     * updateFormValues    获取更新数据 values 
+     * updateFormValues    获取更新数据 values
      * selectedRows        表格多选行数据
      * selectedRowKeys     表格多选key值
      * pageName            设置头部显示标题
@@ -506,6 +506,7 @@ class ProTableCustom extends TableTools {
      * showFooterToolbar 默认显示底部批量操作，设置false不显示
      * tableScroll  固定表格设置滚动条长度
      * rowKey        设置Key 值字段
+     * showTableAlertRender 设置false不显示
      * showTableAlertOptionRender 选中显示  Alert 设置false不显示
      * showTableRender  表格主题显示扩展
      * manualRequest  是否需要手动触发首次请求, 配置为 true的时候手动发送请求
@@ -542,8 +543,8 @@ class ProTableCustom extends TableTools {
       postData: this.postFn,
       dataSource: this.dataSource,
       dateFormatter: dateFormatter ? dateFormatter : 'string',
-      tableAlerRender: showTableAlertRender === false ? false : true,
-      tableAlertOptionRender:  this.tableAlertOptionRender,
+      tableAlertRender: showTableAlertRender === false ? false : ()=>{},
+      tableAlertOptionRender: this.tableAlertOptionRender,
       beforeSearchSubmit: this.beforeSearchSubmit,
       form: this.form,
       onReset: this.resetFn,

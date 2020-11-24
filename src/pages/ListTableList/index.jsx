@@ -38,7 +38,7 @@ class Index extends ProTableCustom {
         tableScroll: { x: 1300 },
         // showFooterToolbar: false,
         dateFormatter: false,
-        showTableAlertRender: false,
+        // showTableAlertRender: false,
         // showTableRender:true,
         // showToolbarSearch: false
         // dateFormatter: 'number'

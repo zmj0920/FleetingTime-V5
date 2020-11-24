@@ -52,7 +52,7 @@
     "@ant-design/pro-form": "^1.6.0",
     "@ant-design/pro-layout": "^6.5.14",
     "@ant-design/pro-list": "^1.0.9",
-    "@ant-design/pro-table": "^2.11.2",
+    "@ant-design/pro-table": "^2.11.4",
     "@umijs/route-utils": "^1.0.34",
     "ahooks": "^2.9.1",
     "antd": "^4.8.4",
