@@ -261,6 +261,7 @@ class ProTableCustom extends TableTools {
     return {
       onChange: (activeKey) => {
         console.log(activeKey)
+
       },
       activeKey: 'tab2',
       items: [
@@ -491,6 +492,8 @@ class ProTableCustom extends TableTools {
     )
   }
 
+
+
   render() {
 
     /**
@@ -541,9 +544,9 @@ class ProTableCustom extends TableTools {
       search: showSearch === false ? false : this.tableSearch(),
       options: this.options,
       postData: this.postFn,
-      dataSource: this.dataSource,
+      // dataSource: this.dataSource,
       dateFormatter: dateFormatter ? dateFormatter : 'string',
-      tableAlertRender: showTableAlertRender === false ? false : ()=>{},
+      tableAlertRender: showTableAlertRender === false ? false : () => { },
       tableAlertOptionRender: this.tableAlertOptionRender,
       beforeSearchSubmit: this.beforeSearchSubmit,
       form: this.form,
@@ -552,7 +555,52 @@ class ProTableCustom extends TableTools {
       tableExtraRender: this.tableExtraRender,
       params: this.params,
       onRequestError: this.onRequestError,
-      manualRequest: manualRequest === true ? true : false
+      manualRequest: manualRequest === true ? true : false,
+      columns: this.getColumn(),
+      request: (params, sorter, filter) => this.getRequest(params, sorter, filter),
+      rowKey: rowKey || 'key',
+      headerTitle: this.headerTitle(),
+      rowSelection: showSelect === true ? { selectedRowKeys, onChange: this.handleSelectRows, } : false,
+      expandable: showExpandedRowRender === true ? { expandedRowRender: this.expandedRowRender, } : false,
+      actionRef: this.actionRef,
+      formRef: this.formRef,
+      tableRender: showTableRender === true ? this.tableRender : false,
+      onSizeChange: (size) => { console.log(size) },
+      editable: {
+        type: 'singe',
+        onSave: (key, row) => {
+          this.onRowEditSave(key, row);
+        },
+        onDelete: (key, row) => {
+          this.onDelete(key, row);
+        },
+        onChange: (editableKeys, editableRows) => {
+          this.onChangeRowEdit(editableKeys, editableRows);
+        },
+        deletePopconfirmMessage: '删除吗？',
+        // actionRender: (row, config) => {
+        //   const { recordKey, isNewLine, cancelEditable, onSave, form } = config;
+        //   return [
+        //     <a
+        //       key="save"
+        //       onClick={async () => {
+        //         const fields = form.getFieldValue([recordKey]);
+        //         await onSave?.(recordKey, { ...row, ...fields });
+        //         form.resetFields([recordKey]);
+        //       }}
+        //     >
+        //       保存
+        //   </a>,
+        //     <a onClick={
+        //       () => {
+        //         cancelEditable(recordKey)
+        //       }
+        //     }>
+        //       取消
+        //   </a>,
+        //   ]
+        // }
+      },
     };
 
     const getColumn = this.getColumn()
@@ -564,29 +612,6 @@ class ProTableCustom extends TableTools {
             getColumn.length > 0 ? (
               <ProTable
                 {...standardTableCustomOption}
-                columns={this.getColumn()}
-                request={(params, sorter, filter) => this.getRequest(params, sorter, filter)}
-                rowKey={rowKey || 'key'}
-                headerTitle={this.headerTitle()}
-                rowSelection={
-                  showSelect === true ? {
-                    selectedRowKeys,
-                    onChange: this.handleSelectRows,
-                  } : false
-                }
-                expandable={
-                  showExpandedRowRender === true ? {
-                    expandedRowRender: this.expandedRowRender,
-                  } : false
-                }
-                actionRef={this.actionRef}
-                formRef={this.formRef}
-                tableRender={showTableRender === true ? this.tableRender : false}
-                onSizeChange={
-                  (size) => {
-                    console.log(size)
-                  }
-                }
               />
             ) : null
           }
@@ -641,29 +666,6 @@ class ProTableCustom extends TableTools {
             getColumn.length > 0 ? (
               <ProTable
                 {...standardTableCustomOption}
-                columns={this.getColumn()}
-                request={(params, sorter, filter) => this.getRequest(params, sorter, filter)}
-                rowKey={rowKey || 'key'}
-                headerTitle={this.headerTitle()}
-                rowSelection={
-                  showSelect === true ? {
-                    selectedRowKeys,
-                    onChange: this.handleSelectRows,
-                  } : false
-                }
-                expandable={
-                  showExpandedRowRender === true ? {
-                    expandedRowRender: this.expandedRowRender,
-                  } : false
-                }
-                actionRef={this.actionRef}
-                formRef={this.formRef}
-                tableRender={showTableRender === true ? this.tableRender : false}
-                onSizeChange={
-                  (size) => {
-                    console.log(size)
-                  }
-                }
               />
             ) : null
           }

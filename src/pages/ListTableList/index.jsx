@@ -14,6 +14,7 @@ import request from 'umi-request';
 import moment from 'moment';
 import style from '@/pages/Welcome.less';
 import ProCard from '@ant-design/pro-card';
+import { TableDropdown } from '@ant-design/pro-table';
 import {
   ProFormText,
   ProFormDatePicker,
@@ -72,6 +73,14 @@ class Index extends ProTableCustom {
   handleDelete = (value) => {
     console.log(value)
   };
+
+  onDelete = (key, row) => {
+    console.log(key, row)
+  }
+
+  onRowEditSave = (key, row) => {
+    console.log(key, row)
+  }
 
   getRequest = (params, sorter, filter) => {
     let paramsData = Object.assign(params, sorter, filter)
@@ -144,23 +153,23 @@ class Index extends ProTableCustom {
       ellipsis: true, //是否自动缩略
       tooltip: '会在 title 之后展示一个 icon，hover 之后提示一些信息',
     },
-    {
-      title: '时间区间',
-      key: 'dateTimeRange',
-      width: 100,
-      align: 'center',
-      dataIndex: 'createdAtRange',
-      valueType: 'dateTimeRange',
-      fieldProps: {
-        className: `${style.pre}`,
-      },
-      search: {
-        transform: (value) => ({
-          startTime: value[0],
-          endTime: value[1],
-        }),
-      },
-    },
+    // {
+    //   title: '时间区间',
+    //   key: 'dateTimeRange',
+    //   width: 100,
+    //   align: 'center',
+    //   dataIndex: 'createdAtRange',
+    //   valueType: 'dateTimeRange',
+    //   fieldProps: {
+    //     className: `${style.pre}`,
+    //   },
+    //   search: {
+    //     transform: (value) => ({
+    //       startTime: value[0],
+    //       endTime: value[1],
+    //     }),
+    //   },
+    // },
     {
       title: '服务调用次数',
       dataIndex: 'callNo',
@@ -231,43 +240,58 @@ class Index extends ProTableCustom {
     },
     {
       title: '操作',
-      dataIndex: 'option',
       valueType: 'option',
-      width: 80,
       align: 'center',
       fixed: 'right',
-      // fixed: 'left',
-      render: (_, record) => (
-        <>
-          <a
-            onClick={() => {
-              this.onUpdate(true);
-              this.setUpdateFormValues(record);
-            }}
-          >
-            配置
-          </a>
-          <Divider type="vertical" />
-          <Popconfirm
-            placement="top"
-            title="确定要删除吗？"
-            onConfirm={() => this.handleDelete(record)}
-            okText="确定"
-            cancelText="取消"
-          >
-            <a>删除</a>
-          </Popconfirm>
-          <Divider type="vertical" />
-          {/* <a
-            onClick={() => {
-              this.testData(record)
-            }}
-          >
-            清空选中
-          </a> */}
-          <Divider type="vertical" />
-        </>
-      ),
+      width: 120,
+      render: (text, record, _, action) => [
+        <a
+          onClick={() => {
+            this.onUpdate(true);
+            this.setUpdateFormValues(record);
+          }}
+        >
+          配置
+          </a>,
+        <a
+          key="editable"
+          onClick={() => {
+            action.startEditable?.(record.id);
+          }}
+        >
+          编辑
+          </a>,
+        <a href={record.url} target="_blank" rel="noopener noreferrer" key="view">
+          查看
+         </a>,
+        <Popconfirm
+          placement="top"
+          title="确定要删除吗？"
+          onConfirm={() => this.handleDelete(record)}
+          okText="确定"
+          cancelText="取消"
+        >
+          <a>删除</a>
+        </Popconfirm>,
+        <TableDropdown
+          key="actionGroup"
+          onSelect={(key) => {
+            action.reload()
+            console.log(key)
+          }
+          }
+          menus={[
+            {
+              key: 'copy',
+              name: '复制',
+            },
+            {
+              key: 'delete',
+              name: '删除',
+            },
+          ]}
+        />,
+      ]
     },
   ];
 
@@ -329,8 +353,6 @@ class Index extends ProTableCustom {
       </div>
     );
   };
-
-
 
 }
 
